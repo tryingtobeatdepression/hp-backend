@@ -1,4 +1,4 @@
-import { FilterQuery, Model, ObjectId } from "mongoose";
+import { CreateOptions, FilterQuery, Model, ObjectId } from "mongoose";
 
 export default class CrudRepository {
     model: Model<any>
@@ -16,5 +16,9 @@ export default class CrudRepository {
 
     async findById(id: ObjectId) {
         return this.model.findOne({ _id: id, })
+    }
+
+    async create(payload: Object, options: CreateOptions) {
+        return this.model.create(payload, options)
     }
 }
