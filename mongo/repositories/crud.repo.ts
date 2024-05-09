@@ -1,13 +1,13 @@
 import { CreateOptions, FilterQuery, Model, ObjectId } from "mongoose";
 
-export default class CrudRepository {
-    model: Model<any>
-    constructor(model: Model<any>) {
+export default class CrudRepository<T> {
+    model: Model<T>
+    constructor(model: Model<T>) {
         this.model = model
     }
 
-    async find(filter: FilterQuery<any>) {
-        return this.model.find(filter,)
+    async find(filter?: FilterQuery<any>) {
+        return this.model.find(filter!,)
     }
 
     async findOne(filter: FilterQuery<any>) {
@@ -18,7 +18,7 @@ export default class CrudRepository {
         return this.model.findOne({ _id: id, })
     }
 
-    async create(payload: Object, options: CreateOptions) {
+    async create(payload: Object, options?: CreateOptions) {
         return this.model.create(payload, options)
     }
 }

@@ -1,25 +1,53 @@
-import { IUser } from "../../mongo/models/user.schema"
 import { Request, Response } from 'express'
-import AdminRepo from "./repostiory"
+import UserRepo from "../../mongo/repositories/user.repo"
+import { StatusCodes, ReasonPhrases } from 'http-status-codes'
+
+// User Repo
+const userRepo = new UserRepo()
+
+/******
+ * 
+ * 
+*/
+interface CreateUserDto {
+    username: string
+    name: string
+    email: string
+    password: string
+    role?: number // visitor
+}
+
 
 export async function list(req: Request, res: Response) {
-    try { 
-        res.send('hello')
-    } catch (e: any) {}
+    try {
+        const users = await userRepo.find()
+        return res.status(StatusCodes.OK).json(users)
+    } catch (e) { }
 }
 
 export async function create(req: Request, res: Response) {
     try {
-        let payload: IUser = {
-            username: "",
-            password: "",
-            email: "",
-            name: "",
-            role: 0,
+        if (!req.body) {
+            return res.status(StatusCodes.BAD_REQUEST).json({
+                error: ReasonPhrases.BAD_REQUEST,
+            })
         }
+        let dto: CreateUserDto = req.body
+        // Validation
+        // Check if `username` already exists
+        if (!await userRepo.findByUsername(dto?.username!))
+            // https://stackoverflow.com/questions/3825990/http-response-code-for-post-when-resource-already-exists
+            return res.status(StatusCodes.CONFLICT).json({
+                error: ReasonPhrases.CONFLICT,
+            })
 
-        console.log('payload', payload)
+        // TODO: If `username` passes, validate fields
+        // if fields are validated, save doc
+        let user = await userRepo.create(dto)
+        res.status(StatusCodes.OK).json(user)
+
     } catch (e: any) {
-
+        console.log(e)
     }
 }
+

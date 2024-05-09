@@ -43,6 +43,6 @@ export class UserSchema extends AbstractSchema {
     }
 }
 
-type UserType = IUser & Document
+export type UserType = IUser & Document
 // Create User model
 export const UserModel = model<UserType>("User", new UserSchema(true).schema)
