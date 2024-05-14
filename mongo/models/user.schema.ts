@@ -1,5 +1,6 @@
-import { Document, model } from "mongoose";
+import { Document, FlatRecord, model } from "mongoose";
 import AbstractSchema from "./abstract.schema";
+import { NextFunction } from "express";
 
 export interface IUser {
     username: string
@@ -18,6 +19,7 @@ export class UserSchema extends AbstractSchema {
         super({ 
             username: {
                 type: String,
+                unique: [true, '"username" already exists.'],
                 required: [true, '"username" is required.'],
             },
             name: {
@@ -43,6 +45,17 @@ export class UserSchema extends AbstractSchema {
     }
 }
 
+const userSchema = new UserSchema(true).schema
+// Error-handling hooks // 
+
+userSchema.post('save', (error: any, doc: FlatRecord<any> , next: any) => {
+    if (error.name === 'MongoServerError' && error.code === 11000){
+        next(new Error('There was a duplicate key error'))
+        
+    } else 
+        next()
+})
+
 export type UserType = IUser & Document
 // Create User model
-export const UserModel = model<UserType>("User", new UserSchema(true).schema)
+export const UserModel = model<UserType>("User", userSchema)

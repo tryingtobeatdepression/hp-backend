@@ -35,7 +35,8 @@ export async function create(req: Request, res: Response) {
         let dto: CreateUserDto = req.body
         // Validation
         // Check if `username` already exists
-        if (!await userRepo.findByUsername(dto?.username!))
+
+        if (await userRepo.findByUsername(dto?.username!))
             // https://stackoverflow.com/questions/3825990/http-response-code-for-post-when-resource-already-exists
             return res.status(StatusCodes.CONFLICT).json({
                 error: ReasonPhrases.CONFLICT,
@@ -43,7 +44,7 @@ export async function create(req: Request, res: Response) {
 
         // TODO: If `username` passes, validate fields
         // if fields are validated, save doc
-        let user = await userRepo.create(dto)
+        const user = await userRepo.create(dto)
         res.status(StatusCodes.OK).json(user)
 
     } catch (e: any) {
