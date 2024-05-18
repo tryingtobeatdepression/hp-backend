@@ -9,7 +9,4 @@ dbConfig(app)
 // Routes handler of all `app` routers
 routesHandler(app)
 
-// Connect to server
-app.listen(3500, () => {
-    console.log('NodeJS development server has connected!')
-})
+export default app
