@@ -11,9 +11,7 @@ dbConfig(app)
 // Routes handler of all `app` routers
 routesHandler(app)
 
-app.use('/experiences',experienceRouter)
-
-
+app.use('api/experiences',experienceRouter)
 app.use(globalError);
 
 export default app

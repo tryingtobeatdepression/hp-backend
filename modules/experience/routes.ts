@@ -8,10 +8,8 @@ router.route('/')
     .get(controller.getAll)
     .post(controller.create)
 
-router.use(validateObjectId)
-
 router.route('/:id')
-    .patch(controller.update)
-    .get(controller.getOne)
-    .delete(controller.destroy)
+    .patch(validateObjectId,controller.update)
+    .get(validateObjectId,controller.getOne)
+    .delete(validateObjectId,controller.destroy)
 

@@ -49,7 +49,7 @@ export  const update = catchAsync(async (req: Request, res: Response,next: NextF
 export  const destroy = catchAsync(async (req: Request, res: Response,next: NextFunction) => {
     const id = req.params.id
 
-    if(! await experienceRepository.findById(id)){
+    if(!await experienceRepository.findById(id)){
         return next(new AppError("No Experience found with that ID", 404));
     }
 
