@@ -6,8 +6,8 @@ import { StatusCodes, ReasonPhrases } from 'http-status-codes'
 const userRepo = new UserRepo()
 
 /******
- * 
- * 
+ *
+ *
 */
 interface CreateUserDto {
     username: string
@@ -20,7 +20,7 @@ interface CreateUserDto {
 
 export async function list(req: Request, res: Response) {
     try {
-        const users = await userRepo.find()
+        const users = await userRepo.findAll()
         return res.status(StatusCodes.OK).json(users)
     } catch (e) { }
 }
