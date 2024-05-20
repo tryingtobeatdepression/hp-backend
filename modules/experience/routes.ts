@@ -1,6 +1,6 @@
 import { Router } from 'express'
 import * as controller from './controller'
-import {validateObjectId} from "../../middleware/validate-objectId";
+import { validateObjectId } from "../../middleware/validate-objectId";
 
 export const router: Router = Router()
 
@@ -9,7 +9,7 @@ router.route('/')
     .post(controller.create)
 
 router.route('/:id')
-    .patch(validateObjectId,controller.update)
-    .get(validateObjectId,controller.getOne)
-    .delete(validateObjectId,controller.destroy)
+    .patch(validateObjectId, controller.update)
+    .get(validateObjectId, controller.getOne)
+    .delete(validateObjectId, controller.destroy)
 

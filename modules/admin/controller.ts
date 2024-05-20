@@ -1,9 +1,7 @@
 import { Request, Response } from 'express'
-import UserRepo from "../../mongo/repositories/user.repo"
+import { userRepo} from "../../mongo/repositories/user.repo"
 import { StatusCodes, ReasonPhrases } from 'http-status-codes'
 
-// User Repo
-const userRepo = new UserRepo()
 
 /******
  *

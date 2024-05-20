@@ -1,7 +1,7 @@
-import { UserModel, UserType } from "../models/user.schema";
+import { UserModel, UserDocument } from "../models/user.schema";
 import CrudRepository from "./crud.repo";
 
-export default class UserRepo extends CrudRepository<UserType> {
+export class UserRepo extends CrudRepository<UserDocument> {
     constructor() {
         super(UserModel)
     }
@@ -15,3 +15,5 @@ export default class UserRepo extends CrudRepository<UserType> {
         return await this.model.findOne({ username, })
     }
 }
+
+export const userRepo = new UserRepo()

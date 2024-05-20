@@ -1,6 +1,7 @@
-import { Document, FlatRecord, model } from "mongoose";
+import { Document, FlatRecord, model, } from "mongoose";
 import AbstractSchema from "./abstract.schema";
-import { NextFunction } from "express";
+import { hashToken } from "../../utils/encryption";
+
 
 export interface IUser {
     username: string
@@ -10,13 +11,11 @@ export interface IUser {
     role: number
 }
 
-export enum UserRoles {
-    'admin', 'visitor'
-}
+export const UserRoles = ['visitor', 'admin']
 
 export class UserSchema extends AbstractSchema {
     constructor(timestamps: boolean) {
-        super({ 
+        super({
             username: {
                 type: String,
                 unique: [true, '"username" already exists.'],
@@ -29,16 +28,17 @@ export class UserSchema extends AbstractSchema {
             email: {
                 type: String,
                 // match: 
-                required: [true, '"email" is required.']
-            }, 
+                required: [true, '"email" is required.'],
+                unique: [true, '"email" already exists.']
+            },
             password: {
                 type: String,
-                required: [true, '"password" is required.']
+                required: [true, '"password" is required.'],
+
             },
             role: {
                 type: Number,
-                enum: UserRoles,
-                default: UserRoles['visitor'],
+                default: 1,
                 required: [true, '"role" is required.']
             }
         }, timestamps,)
@@ -46,16 +46,25 @@ export class UserSchema extends AbstractSchema {
 }
 
 const userSchema = new UserSchema(true).schema
-// Error-handling hooks // 
 
-userSchema.post('save', (error: any, doc: FlatRecord<any> , next: any) => {
-    if (error.name === 'MongoServerError' && error.code === 11000){
+// Handle "Document doesn't exist" error
+userSchema.post('save', (error: any, doc: FlatRecord<any>, next: any) => {
+    if (error.name === 'MongoServerError' && error.code === 11000) {
         next(new Error('There was a duplicate key error'))
-        
-    } else 
+
+    } else
         next()
 })
 
-export type UserType = IUser & Document
+// https://stackoverflow.com/questions/49473635/mongoose-pre-save-gives-me-red-lines
+// Hash passwords pre saving document
+userSchema.pre('save', async function (this: UserDocument, next: any) {
+    if (this.isNew) {
+        this.password = await hashToken(this.password)
+    }
+    next()
+})
+
+export type UserDocument = IUser & Document
 // Create User model
-export const UserModel = model<UserType>("User", userSchema)
+export const UserModel = model<UserDocument>("User", userSchema)
