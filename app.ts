@@ -21,5 +21,6 @@ dbConfig()
 // Routes handler of all `app` routers
 routesHandler(app)
 app.use(globalError);
+app.use(globalError);
 
 export default app

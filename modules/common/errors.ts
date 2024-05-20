@@ -1,5 +1,5 @@
-import { Error } from "mongoose";
-import { NextFunction, Request, Response } from "express";
+import {Error} from "mongoose";
+import {NextFunction, Request, Response} from "express";
 
 export class AppError extends Error {
     statusCode?: number;
@@ -10,7 +10,7 @@ export class AppError extends Error {
         super(message);
 
         this.statusCode = statusCode;
-        this.status = statusCode >= 400 && statusCode < 600 ? 'fail' : 'error';
+        this.status = statusCode >= 400 && statusCode < 600? 'fail' : 'error';
         this.isOperational = true;
         Object.setPrototypeOf(this, new.target.prototype);
     }
@@ -54,8 +54,8 @@ const sendError = (err: any, res: any): void => {
     });
 }
 
-export default (err: any, req: Request, res: Response, next: NextFunction) => {
-    let error = { ...err };
+export default (err: any , req: Request, res: Response,next: NextFunction) => {
+    let error = {...err };
     if (err.name === "CastError") {
         error = handleCastErrorDB(error);
         return sendError(error, res);
@@ -77,8 +77,9 @@ export default (err: any, req: Request, res: Response, next: NextFunction) => {
         error = handleJWTExpiredError();
         return sendError(error, res);
     }
-    return res.status(err.statusCode).json({
+   return  res.status(err.statusCode).json({
         status: err.status,
         message: err.message,
     });
+
 }
