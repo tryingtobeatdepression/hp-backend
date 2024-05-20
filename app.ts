@@ -9,8 +9,8 @@ app.use(express.json())
 declare global {
     namespace Express {
         interface Request {
-            user?: {
-                id: string, role: number
+            user?: {    
+                id: string, role: string
             }
         }
     }

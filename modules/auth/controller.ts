@@ -36,6 +36,6 @@ export const login = catchAsync(async (req: Request, res: Response, next: NextFu
     )
 
     res.status(200).json({
-        token,
+        token, user
     })
 })

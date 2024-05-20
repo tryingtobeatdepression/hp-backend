@@ -1,11 +1,9 @@
-import { Schema, SchemaDefinition } from 'mongoose'
+import { Schema, SchemaDefinition, SchemaOptions } from 'mongoose'
 
 export default class AbstractSchema {
     schema: Schema
-    constructor(definition: SchemaDefinition, timestamps: boolean) {
-        this.schema = new Schema(definition, {
-            timestamps: timestamps,
-        })
+    constructor(definition: SchemaDefinition, options?: SchemaOptions) {
+        this.schema = new Schema(definition, options!)
     }
 }
 
