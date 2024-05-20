@@ -8,4 +8,4 @@ export const router: Router = Router()
 
 router.route('/')
     .get(isAuthenticated, controller.list)
-    .post(isAuthenticated, isRole(0), controller.create)
+    .post(isAuthenticated, isRole([0]), controller.create)
