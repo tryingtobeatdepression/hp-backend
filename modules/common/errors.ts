@@ -17,7 +17,8 @@ export class AppError extends Error {
 }
 
 const handleDuplicateFieldsDB = (err: any): AppError => {
-    const message = `Duplicate field value:${err.keyValue.name} please use another value `;
+    const field = JSON.stringify(err.keyValue).split('\"')
+    const message = `Duplicate field value: "${field[1]}". Please use another value.`;
     return new AppError(message, 400);
 }
 
@@ -40,6 +41,7 @@ const handleCastErrorDB = (err: any): AppError => {
     const message = `Invalid ${path}:${err.value}.`;
     return new AppError(message, 400);
 }
+
 
 const sendError = (err: any, res: any): void => {
     if (err.isOperational) {

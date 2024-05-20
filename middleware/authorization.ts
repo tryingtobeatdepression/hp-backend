@@ -1,12 +1,13 @@
 import { NextFunction, Request, Response } from "express";
-import { UserRoles } from "../mongo/models/user.schema";
 import { AppError } from "../modules/common/errors";
 
-export const isRole = (roles: number[]) => {
+export const isRole = (roles: string[]) => {
     return (req: Request, res: Response, next: NextFunction) => {
         const role = req?.user?.role
+        console.log(`role: ${role}`)
+        console.log(`role.includes: ${roles.includes(role!)}`)
         if (!role || !roles.includes(role))
-            return next(new AppError(`${UserRoles[role!]}`, 403))
+            return next(new AppError(`Forbidden`, 403))
         next()
     }
 }

@@ -1,6 +1,7 @@
 import { Document, FlatRecord, model, } from "mongoose";
 import AbstractSchema from "./abstract.schema";
 import { hashToken } from "../../utils/encryption";
+import { UserRoles } from "../../modules/user/enum";
 
 
 export interface IUser {
@@ -8,10 +9,8 @@ export interface IUser {
     name: string
     email: string
     password: string
-    role: number
+    role: string
 }
-
-export const UserRoles = ['visitor', 'admin']
 
 export class UserSchema extends AbstractSchema {
     constructor(timestamps: boolean) {
@@ -37,24 +36,27 @@ export class UserSchema extends AbstractSchema {
 
             },
             role: {
-                type: Number,
-                default: 1,
+                type: String,
+                enum: UserRoles,
+                default: UserRoles['VISITOR'],
                 required: [true, '"role" is required.']
+            },
+
+        }, {
+            timestamps,
+            toJSON: {
+                virtuals: true,
+                transform: function (doc, ret) {
+                    delete ret._id
+                    delete ret.__v
+                    delete ret.password
+                },
             }
-        }, timestamps,)
+        })
     }
 }
 
 const userSchema = new UserSchema(true).schema
-
-// Handle "Document doesn't exist" error
-userSchema.post('save', (error: any, doc: FlatRecord<any>, next: any) => {
-    if (error.name === 'MongoServerError' && error.code === 11000) {
-        next(new Error('There was a duplicate key error'))
-
-    } else
-        next()
-})
 
 // https://stackoverflow.com/questions/49473635/mongoose-pre-save-gives-me-red-lines
 // Hash passwords pre saving document
