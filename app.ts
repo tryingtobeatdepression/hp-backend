@@ -9,7 +9,7 @@ app.use(express.json())
 declare global {
     namespace Express {
         interface Request {
-            user?: {    
+            user?: {
                 id: string, role: number
             }
         }
@@ -20,7 +20,6 @@ declare global {
 dbConfig()
 // Routes handler of all `app` routers
 routesHandler(app)
-app.use(globalError);
 app.use(globalError);
 
 export default app
