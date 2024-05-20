@@ -31,7 +31,7 @@ export const login = catchAsync(async (req: Request, res: Response, next: NextFu
         },
         process.env.JWT_SECRET_KEY!,
         {
-            expiresIn: '2m'
+            expiresIn: process.env.EXPIRES_IN!,
         }
     )
 
