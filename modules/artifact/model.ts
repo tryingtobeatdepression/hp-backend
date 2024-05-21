@@ -1,9 +1,11 @@
-import { Document, model } from "mongoose";
+import { Document, Types, model } from "mongoose";
 import AbstractSchema from "../../mongo/models/abstract.schema";
+import { IOrganziation } from "../organization/model";
 
 interface Dimension { height: number, width: number, unit: string }
 
 export interface IArtifact extends Document {
+    organization: IOrganziation['_id'],
     name: string
     description: string
     media: string[]
@@ -18,6 +20,10 @@ export interface IArtifact extends Document {
 export class ArtifactSchema extends AbstractSchema<IArtifact> {
     constructor(timestamps: boolean) {
         super({
+            organization: {
+                type: Types.ObjectId,
+                ref: "Organization"
+            },
             name: String,
             description: String,
             media: Array<String>,
@@ -31,6 +37,7 @@ export class ArtifactSchema extends AbstractSchema<IArtifact> {
             },
             indexCode: String,
             currentLocation: String,
+            
         }, {
             timestamps,
             toJSON: {

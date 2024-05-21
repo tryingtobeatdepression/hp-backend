@@ -6,7 +6,9 @@ import { isRole } from '../../middleware/authorization'
 import { OrgTypes } from '../organization/enums'
 import { validateObjectId } from '../../middleware/validate-objectId'
 
-export const router: Router = Router()
+export const router: Router = Router({
+    mergeParams: true,
+})
 
 router.route('/')
     .get(controller.list)
