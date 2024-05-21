@@ -26,12 +26,12 @@ router.route('/:id')
     .patch(
         validateObjectId,
         isAuthenticated,
-        restrictTo(userRepo, 'admin', ['visitor']),
+        restrictTo(userRepo, 'admin'),
         controller.update
     )
     .delete(
         validateObjectId,
         isAuthenticated,
-        restrictTo(userRepo, 'admin', ['visitor']),
+        restrictTo(userRepo, 'admin'),
         controller.destroy
     )
