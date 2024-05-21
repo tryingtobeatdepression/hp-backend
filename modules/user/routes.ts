@@ -14,13 +14,13 @@ router.route('/')
 
 router.route('/:id')
     .get(validateObjectId, isAuthenticated, controller.findOne)
-    .get(
+    .patch(
         validateObjectId,
         isAuthenticated,
         isRole([UserRoles.ADMIN, UserRoles.VISITOR]),
         controller.update
     )
-    .get(
+    .delete(
         validateObjectId,
         isAuthenticated,
         isRole([UserRoles.ADMIN, UserRoles.VISITOR]),
