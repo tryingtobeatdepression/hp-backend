@@ -4,6 +4,7 @@ import { isRole } from '../../middleware/authorization'
 import { isAuthenticated } from '../../middleware/auth'
 import { UserRoles } from './enums'
 import { validateObjectId } from '../../middleware/validate-objectId'
+import { adminOnly } from '../../middleware/admin-only'
 
 export const router: Router = Router()
 
@@ -23,12 +24,12 @@ router.route('/:id')
     .patch(
         validateObjectId,
         isAuthenticated,
-        isRole(Object.values(UserRoles)),
+        adminOnly,
         controller.update
     )
     .delete(
         validateObjectId,
         isAuthenticated,
-        isRole(Object.values(UserRoles)),
+        adminOnly,
         controller.destroy
     )

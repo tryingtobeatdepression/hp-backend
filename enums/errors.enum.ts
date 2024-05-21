@@ -3,6 +3,7 @@ export const enum ErrorMessages {
     USER_DOESNT_EXIST = "User doesn't exist!.",
     PASSWORDS_DONT_MATCH = "Passwords don't match!.",
     UNAUTHORIZED = "Unauthorized user.",
-    INVALID_TOKEN = "Invalid authentication token."
+    INVALID_TOKEN = "Invalid authentication token.",
+    ADMIN_ONLY = "Only admins are allowed."
 }
 
