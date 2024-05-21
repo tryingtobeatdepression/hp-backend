@@ -1,6 +1,6 @@
 import { Document, model } from "mongoose";
 import AbstractSchema from "../../mongo/models/abstract.schema";
-import { OrganizationTypes } from "./enums";
+import { OrgTypes } from "./enums";
 import { hashToken } from "../../utils/encryption";
 
 export interface IOrganziation extends Document {
@@ -11,7 +11,7 @@ export interface IOrganziation extends Document {
     role: string
 }
 
-export class OrganizationSchema extends AbstractSchema {
+export class OrganizationSchema extends AbstractSchema<IOrganziation> {
     constructor(timestamps: boolean) {
         super({
             name: {
@@ -25,8 +25,8 @@ export class OrganizationSchema extends AbstractSchema {
             overview: String,
             role: {
                 type: String,
-                enum: OrganizationTypes,
-                default: OrganizationTypes.OTHER,
+                enum: OrgTypes,
+                default: OrgTypes.OTHER,
             },
         }, {
             timestamps,

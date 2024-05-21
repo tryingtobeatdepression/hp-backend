@@ -1,4 +1,4 @@
-export enum OrganizationTypes {
+export enum OrgTypes {
     MUSUEM = "musuem",
     TOURISM_MINISTRY = "tourism_ministry",
     UNIVERSITY = "university",

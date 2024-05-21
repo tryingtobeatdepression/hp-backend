@@ -3,7 +3,7 @@ import * as controller from './controller'
 import { isAuthenticated } from '../../middleware/auth'
 import { UserRoles } from '../user/enums'
 import { isRole } from '../../middleware/authorization'
-import { OrganizationTypes } from './enums'
+import { OrgTypes } from './enums'
 import { validateObjectId } from '../../middleware/validate-objectId'
 
 export const router: Router = Router()
@@ -20,7 +20,7 @@ router.route('/:id') // TESTED ✅
     .patch( 
         validateObjectId,
         isAuthenticated,
-        isRole([...Object.values(OrganizationTypes), UserRoles.ADMIN]),
+        isRole([...Object.values(OrgTypes), UserRoles.ADMIN]),
         controller.update
     )
     .delete(

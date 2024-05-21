@@ -1,4 +1,4 @@
-import { Document, FlatRecord, model, } from "mongoose";
+import { Document, model, } from "mongoose";
 import AbstractSchema from "./abstract.schema";
 import { hashToken } from "../../utils/encryption";
 import { UserRoles } from "../../modules/user/enums";
@@ -12,12 +12,12 @@ export interface IUser extends Document {
     role: string
 }
 
-export class UserSchema extends AbstractSchema {
+export class UserSchema extends AbstractSchema<IUser> {
     constructor(timestamps: boolean) {
         super({
             username: {
                 type: String,
-                unique: [true, '"username" already exists.'],
+                unique: true,
                 required: [true, '"username" is required.'],
             },
             name: {
@@ -28,7 +28,7 @@ export class UserSchema extends AbstractSchema {
                 type: String,
                 // match: 
                 required: [true, '"email" is required.'],
-                unique: [true, '"email" already exists.']
+                unique: true,
             },
             password: {
                 type: String,
