@@ -14,17 +14,16 @@ export const create = catchAsync(async (req: Request, res: Response, next: NextF
 })
 
 export const list = catchAsync(async (req: Request, res: Response, next: NextFunction) => {
-    
+    // const orgId = req.params['orgid']
+    const document = await artifactRepo.findAll();
+    res.status(200).json({
+        status: 'success',
+        document
+    });
 })
 
-export const findOne = catchAsync(async (req: Request, res: Response, next: NextFunction) => {
+export const findOne = factory.getOne(artifactRepo)
 
-})
+export const update = factory.update(artifactRepo)
 
-export const update = catchAsync(async (req: Request, res: Response, next: NextFunction) => {
-    
-})
-
-export const destroy = catchAsync(async (req: Request, res: Response, next: NextFunction) => {
-    
-})
+export const destroy = factory.destroy(artifactRepo)
