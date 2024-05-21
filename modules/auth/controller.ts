@@ -4,13 +4,12 @@ import { userRepo } from "../../mongo/repositories/user.repo";
 import { compareTokens } from "../../utils/encryption";
 import { sign } from "jsonwebtoken";
 import catchAsync from "../../utils/catch-async";
-import { AuthDto } from "../../middleware/check-login-input";
 import { organizationRepo } from "../organization/repository";
 
 
 export const login = (isOrg: boolean = false) => {
     return (catchAsync(async (req: Request, res: Response, next: NextFunction) => {
-        const { email, password }: AuthDto = req.body
+        const { email, password } = req.body
         const repo = isOrg ? organizationRepo : userRepo
         // Check if user exists
         const user = await repo.findByEmail(email)

@@ -2,7 +2,6 @@ import { Router } from 'express'
 import * as controller from './controller'
 import { isAuthenticated } from '../../middleware/auth'
 import { UserRoles } from '../user/enums'
-import { isRole } from '../../middleware/authorization'
 import { OrgTypes } from './enums'
 import { validateObjectId } from '../../middleware/validate-objectId'
 import { router as artifactRouter }  from '../artifact/routes'
@@ -23,12 +22,12 @@ router.route('/:id') // TESTED ✅
     .patch( 
         validateObjectId,
         isAuthenticated,
-        isRole([...Object.values(OrgTypes), UserRoles.ADMIN]),
+        restrictTo([...Object.values(OrgTypes), UserRoles.ADMIN]),
         controller.update
     )
     .delete(
         validateObjectId,
         isAuthenticated,
-        isRole([UserRoles.ADMIN]),
+        restrictTo([UserRoles.ADMIN]),
         controller.destroy
     )

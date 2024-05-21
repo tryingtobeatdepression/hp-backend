@@ -1,18 +1,11 @@
-import { Request, Response } from "express";
+import { NextFunction, Request, Response } from "express";
 import { AppError } from "../modules/common/errors";
-import CrudRepository from "../mongo/repositories/crud.repo";
 
-export const restrictTo =
-    (repo: CrudRepository<any>) => {
-        return (async (req: Request, res: Response, next: any) => {
-            const id = req.params.id;
-            const doc = await repo.findById(id)
-            if (
-                doc?.role! &&
-                doc?.role !== req?.user?.role
-            ) {
-                return next(new AppError(`Only ${doc?.role!}s are allowed.`, 403))
-            }
-            next()
-        })
+export const restrictTo = (roles: string[]) => {
+    return (req: Request, res: Response, next: NextFunction) => {
+        const role = req?.user?.role
+        if (!role || !roles.includes(role))
+            return next(new AppError(`Not found`, 404))
+        next()
     }
+}
