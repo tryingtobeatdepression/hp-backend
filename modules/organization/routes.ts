@@ -8,7 +8,7 @@ import { validateObjectId } from '../../middleware/validate-objectId'
 import { router as artifactRouter }  from '../artifact/routes'
 
 export const router: Router = Router()
-router.use('/:id/artifacts', artifactRouter)
+router.use('/:orgid/artifacts', artifactRouter)
 
 router.route('/')    // TESTED ✅
     .get(controller.list)
