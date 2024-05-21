@@ -5,6 +5,8 @@ import { isAuthenticated } from '../../middleware/auth'
 import { UserRoles } from './enums'
 import { validateObjectId } from '../../middleware/validate-objectId'
 import { adminOnly } from '../../middleware/admin-only'
+import { restrictTo } from '../../middleware/restrict-to'
+import { userRepo } from '../../mongo/repositories/user.repo'
 
 export const router: Router = Router()
 
@@ -24,12 +26,12 @@ router.route('/:id')
     .patch(
         validateObjectId,
         isAuthenticated,
-        adminOnly,
+        restrictTo(userRepo, ['admin'], ['visitor']),
         controller.update
     )
     .delete(
         validateObjectId,
         isAuthenticated,
-        adminOnly,
+        restrictTo(userRepo, ['admin'], ['visitor']),
         controller.destroy
     )
