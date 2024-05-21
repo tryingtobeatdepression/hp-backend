@@ -3,20 +3,18 @@ import { AppError } from "../modules/common/errors";
 import CrudRepository from "../mongo/repositories/crud.repo";
 
 export const restrictTo =
-    (repos: CrudRepository<any>[], allowed: string, forbidden: string[]) => {
+    (repo: CrudRepository<any>, allowed: string, forbidden: string[]) => {
         return (async (req: Request, res: Response, next: any) => {
             const id = req.params.id;
-            repos.map(async (repo) => {
-                const doc = await repo.findById(id)
-                if (
-                    doc?.role! &&
-                    doc?.role === allowed &&
-                    forbidden.includes(req?.user?.role!)
-                ) {
-                    console.log('next')
-                    return next(new AppError(`Only ${allowed}s are allowed.`, 403))
-                }
-            })
+            const doc = await repo.findById(id)
+            if (
+                doc?.role! &&
+                doc?.role === allowed &&
+                forbidden.includes(req?.user?.role!)
+            ) {
+                console.log('next')
+                return next(new AppError(`Only ${allowed}s are allowed.`, 403))
+            }
             next()
         })
     }
