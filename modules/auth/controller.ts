@@ -1,5 +1,5 @@
 import { NextFunction, Request, Response } from "express";
-import { ErrorMessages } from "../../enums/errors.enum";
+import { ErrorMessages } from "../common/enums/errors.enum";
 import { userRepo } from "../../mongo/repositories/user.repo";
 import { compareTokens } from "../../utils/encryption";
 import { sign } from "jsonwebtoken";

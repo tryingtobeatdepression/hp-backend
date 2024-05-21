@@ -1,5 +1,5 @@
 import { verify } from "jsonwebtoken"
-import { ErrorMessages } from "../enums/errors.enum"
+import { ErrorMessages } from "../modules/common/enums/errors.enum"
 import { AppError } from "../modules/common/errors"
 import { NextFunction, Request, Response } from "express"
 import { organizationRepo } from "../modules/organization/repository"

@@ -1,7 +1,7 @@
 import { Request, Response } from "express";
 import { userRepo } from "../mongo/repositories/user.repo";
 import { AppError } from "../modules/common/errors";
-import { ErrorMessages } from "../enums/errors.enum";
+import { ErrorMessages } from "../modules/common/enums/errors.enum";
 
 export const adminOnly = async (req: Request, res: Response, next: any) => {
     const id = req.params.id;
