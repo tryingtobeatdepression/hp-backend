@@ -1,10 +1,10 @@
-import { Document, FlatRecord, model, } from "mongoose";
+import { Document, model, } from "mongoose";
 import AbstractSchema from "./abstract.schema";
 import { hashToken } from "../../utils/encryption";
-import { UserRoles } from "../../modules/user/enum";
+import { UserRoles } from "../../modules/user/enums";
 
 
-export interface IUser {
+export interface IUser extends Document {
     username: string
     name: string
     email: string
@@ -12,12 +12,12 @@ export interface IUser {
     role: string
 }
 
-export class UserSchema extends AbstractSchema {
+export class UserSchema extends AbstractSchema<IUser> {
     constructor(timestamps: boolean) {
         super({
             username: {
                 type: String,
-                unique: [true, '"username" already exists.'],
+                unique: true,
                 required: [true, '"username" is required.'],
             },
             name: {
@@ -28,7 +28,7 @@ export class UserSchema extends AbstractSchema {
                 type: String,
                 // match: 
                 required: [true, '"email" is required.'],
-                unique: [true, '"email" already exists.']
+                unique: true,
             },
             password: {
                 type: String,
@@ -60,13 +60,11 @@ const userSchema = new UserSchema(true).schema
 
 // https://stackoverflow.com/questions/49473635/mongoose-pre-save-gives-me-red-lines
 // Hash passwords pre saving document
-userSchema.pre('save', async function (this: UserDocument, next: any) {
-    if (this.isNew) {
+userSchema.pre('save', async function (this: IUser, next: any) {
+    if (this.isNew) 
         this.password = await hashToken(this.password)
-    }
     next()
 })
 
-export type UserDocument = IUser & Document
 // Create User model
-export const UserModel = model<UserDocument>("User", userSchema)
+export const UserModel = model<IUser>("User", userSchema)
