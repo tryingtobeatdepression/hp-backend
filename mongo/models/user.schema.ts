@@ -1,8 +1,6 @@
-import { Document, model, } from "mongoose";
-import AbstractSchema from "./abstract.schema";
-import { hashToken } from "../../utils/encryption";
+import { Document, Schema, model, } from "mongoose";
 import { UserRoles } from "../../modules/user/enums";
-
+import { generateRefreshToken, generateToken, isPasswordCorrect, preSaveUser } from "./util/methods";
 
 export interface IUser extends Document {
     username: string
@@ -10,61 +8,55 @@ export interface IUser extends Document {
     email: string
     password: string
     role: string
+    refreshToken: string
 }
 
-export class UserSchema extends AbstractSchema<IUser> {
-    constructor(timestamps: boolean) {
-        super({
-            username: {
-                type: String,
-                unique: true,
-                required: [true, '"username" is required.'],
-            },
-            name: {
-                type: String,
-                required: [true, '"name" is required.'],
-            },
-            email: {
-                type: String,
-                // match: 
-                required: [true, '"email" is required.'],
-                unique: true,
-            },
-            password: {
-                type: String,
-                required: [true, '"password" is required.'],
+const userSchema = new Schema<IUser>({
+    username: {
+        type: String,
+        unique: true,
+        required: [true, '"username" is required.'],
+    },
+    name: {
+        type: String,
+        required: [true, '"name" is required.'],
+    },
+    email: {
+        type: String,
+        // match: 
+        required: [true, '"email" is required.'],
+        unique: true,
+    },
+    password: {
+        type: String,
+        required: [true, '"password" is required.'],
 
-            },
-            role: {
-                type: String,
-                enum: UserRoles,
-                default: UserRoles['VISITOR'],
-                required: [true, '"role" is required.']
-            },
-
-        }, {
-            timestamps,
-            toJSON: {
-                virtuals: true,
-                transform: function (doc, ret) {
-                    delete ret._id
-                    delete ret.__v
-                    delete ret.password
-                },
-            }
-        })
+    },
+    role: {
+        type: String,
+        enum: UserRoles,
+        default: UserRoles['VISITOR'],
+        required: [true, '"role" is required.']
+    },
+    refreshToken: String,
+}, {
+    timestamps: true,
+    toJSON: {
+        virtuals: true,
+        transform: function (doc: any, ret: any) {
+            delete ret._id
+            delete ret.__v
+            delete ret.password
+            delete ret.refreshToken
+        },
     }
-}
-
-const userSchema = new UserSchema(true).schema
-
-// https://stackoverflow.com/questions/49473635/mongoose-pre-save-gives-me-red-lines
-// Hash passwords pre saving document
-userSchema.pre('save', async function (this: IUser, next: any) {
-    if (this.isNew) 
-        this.password = await hashToken(this.password)
-    next()
 })
+
+
+userSchema.pre('save', preSaveUser)
+userSchema.methods.isPasswordCorrect = isPasswordCorrect
+userSchema.methods.generateToken = generateToken
+userSchema.methods.generateRefreshToken = generateRefreshToken
 
 // Create User model
 export const UserModel = model<IUser>("User", userSchema)

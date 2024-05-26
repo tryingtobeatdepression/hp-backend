@@ -1,7 +1,6 @@
-import { Document, model } from "mongoose";
-import AbstractSchema from "../../mongo/models/abstract.schema";
+import { Document, Schema, model } from "mongoose";
 import { OrgTypes } from "./enums";
-import { hashToken } from "../../utils/encryption";
+import { preSaveUser } from "../../mongo/models/util/methods";
 
 export interface IOrganziation extends Document {
     name: string
@@ -11,42 +10,33 @@ export interface IOrganziation extends Document {
     role: string
 }
 
-export class OrganizationSchema extends AbstractSchema<IOrganziation> {
-    constructor(timestamps: boolean) {
-        super({
-            name: {
-                type: String,
-            },
-            email: {
-                type: String,
-                unique: true,
-            },
-            password: String,
-            overview: String,
-            role: {
-                type: String,
-                enum: OrgTypes,
-                default: OrgTypes.OTHER,
-            },
-        }, {
-            timestamps,
-            toJSON: {
-                virtuals: true,
-                transform: (doc, ret) => {
-                    delete ret._id
-                    delete ret.__v
-                }
-            }
-        })
+const orgSchema = new Schema<IOrganziation>({
+    name: {
+        type: String,
+    },
+    email: {
+        type: String,
+        unique: true,
+    },
+    password: String,
+    overview: String,
+    role: {
+        type: String,
+        enum: OrgTypes,
+        default: OrgTypes.OTHER,
+    },
+}, {
+    timestamps: true,
+    toJSON: {
+        virtuals: true,
+        transform: (doc, ret) => {
+            delete ret._id
+            delete ret.__v
+        }
     }
-}
-
-const orgSchema = new OrganizationSchema(true).schema
-
-orgSchema.pre('save', async function (this: IOrganziation, next: any) {
-    if (this.isNew)
-        this.password = await hashToken(this.password)
-    next()
 })
+
+
+orgSchema.pre('save', preSaveUser)
 
 export const Organization = model<IOrganziation>('Organization', orgSchema)

@@ -9,6 +9,6 @@ export async function hashToken(token: string): Promise<string> {
     return await hash(token, await genSalt(10))
 }
 
-export async function compareTokens(token: string, hashedToken: string) {
+export async function compareToken(token: string, hashedToken: string) {
     return await compare(token, hashedToken)
 }

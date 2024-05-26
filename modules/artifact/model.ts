@@ -1,8 +1,7 @@
-import { Document, Types, model } from "mongoose";
-import AbstractSchema from "../../mongo/models/abstract.schema";
+import { Document, Schema, Types, model } from "mongoose";
 import { IOrganziation } from "../organization/model";
 
-interface Dimension { height: number, width: number, unit: string }
+export interface Dimension { height: number, width: number, unit: string }
 
 export interface IArtifact extends Document {
     organization: IOrganziation['_id'],
@@ -17,40 +16,33 @@ export interface IArtifact extends Document {
     currentLocation: string
 }
 
-export class ArtifactSchema extends AbstractSchema<IArtifact> {
-    constructor(timestamps: boolean) {
-        super({
-            organization: {
-                type: Types.ObjectId,
-                ref: "Organization"
-            },
-            name: String,
-            description: String,
-            media: Array<String>,
-            discoveryLocation: String,
-            age: String,
-            material: String,
-            dimensions: {
-                height: Number,
-                width: Number,
-                unit: String
-            },
-            indexCode: String,
-            currentLocation: String,
-            
-        }, {
-            timestamps,
-            toJSON: {
-                virtuals: true,
-                transform: (doc, ret) => {
-                    delete ret._id
-                    delete ret.__v
-                }
-            }
-        })
+const schema = new Schema({
+    organization: {
+        type: Types.ObjectId,
+        ref: "Organization"
+    },
+    name: String,
+    description: String,
+    media: Array<String>,
+    discoveryLocation: String,
+    age: String,
+    material: String,
+    dimensions: {
+        height: Number,
+        width: Number,
+        unit: String
+    },
+    indexCode: String,
+    currentLocation: String,
+}, {
+    timestamps: true,
+    toJSON: {
+        virtuals: true,
+        transform: (doc, ret) => {
+            delete ret._id
+            delete ret.__v
+        }
     }
-}
-
-const artifactSchema = new ArtifactSchema(true).schema
-
-export const Artifact = model<IArtifact>("Artifact", artifactSchema)
+})
+ 
+export const Artifact = model<IArtifact>("Artifact", schema)

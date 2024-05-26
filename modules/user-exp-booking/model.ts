@@ -1,5 +1,4 @@
-import { Document, Types, model } from "mongoose";
-import AbstractSchema from "../../mongo/models/abstract.schema";
+import { Document, Schema, Types, model } from "mongoose";
 import { IUser } from "../../mongo/models/user.schema";
 import { IOrganizationExperience } from "../organization-experience/model";
 
@@ -9,33 +8,28 @@ export interface IUserExpBooking extends Document {
     bookingDate: Date,
 }
 
-export class UserExpBookingSchema extends AbstractSchema<IUserExpBooking> {
-    constructor(timestamps: boolean) {
-        super({
-            user: {
-                type: Types.ObjectId,
-                ref: "User"
-            }, 
-            orgExperience: {
-                type: Types.ObjectId,
-                ref: "OrganizationExperience"
-            },
-            bookingDate: {
-                type: Date,
-                default: Date.now()
-            }
-        }, {
-            timestamps,
-            toJSON: {
-                virtuals: true,
-                transform: (doc, ret) => {
-                    delete ret._id
-                    delete ret.__v
-                }
-            }
-        })
+const schema = new Schema({
+    user: {
+        type: Types.ObjectId,
+        ref: "User"
+    },
+    orgExperience: {
+        type: Types.ObjectId,
+        ref: "OrganizationExperience"
+    },
+    bookingDate: {
+        type: Date,
+        default: Date.now()
     }
-}
-
-const userExpBookingSchema = new UserExpBookingSchema(true).schema
-export const UserExpBooking = model("UserExpBooking", userExpBookingSchema)
+}, {
+    timestamps: true,
+    toJSON: {
+        virtuals: true,
+        transform: (doc, ret) => {
+            delete ret._id
+            delete ret.__v
+        }
+    }
+})
+   
+export const UserExpBooking = model<IUserExpBooking>("UserExpBooking", schema)
