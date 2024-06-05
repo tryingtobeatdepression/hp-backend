@@ -1,6 +1,6 @@
 import { Document, Schema, model } from "mongoose";
 import { OrgTypes } from "./enums";
-import { preSaveUser } from "../../mongo/models/util/methods";
+import { preSaveUser } from "../../mongo/util/methods";
 
 export interface IOrganziation extends Document {
     name: string

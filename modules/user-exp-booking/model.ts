@@ -1,5 +1,5 @@
 import { Document, Schema, Types, model } from "mongoose";
-import { IUser } from "../../mongo/models/user.schema";
+import { IUser } from "../user/model";
 import { IOrganizationExperience } from "../organization-experience/model";
 
 export interface IUserExpBooking extends Document {

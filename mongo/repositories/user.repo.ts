@@ -1,4 +1,4 @@
-import { UserModel, IUser } from "../models/user.schema";
+import { UserModel, IUser } from "../../modules/user/model";
 import CrudRepository from "./crud.repo";
 
 export class UserRepo extends CrudRepository<IUser> {

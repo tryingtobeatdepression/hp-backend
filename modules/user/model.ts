@@ -1,6 +1,6 @@
 import { Document, Schema, model, } from "mongoose";
-import { UserRoles } from "../../modules/user/enums";
-import { generateRefreshToken, generateToken, isPasswordCorrect, preSaveUser } from "./util/methods";
+import { UserRoles } from "./enums";
+import { generateRefreshToken, generateToken, isPasswordCorrect, preSaveUser } from "../../mongo/util/methods";
 
 export interface IUser extends Document {
     username: string

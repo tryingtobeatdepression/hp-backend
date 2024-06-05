@@ -1,5 +1,5 @@
 import { sign } from "jsonwebtoken";
-import { compareToken, hashToken } from "../../../utils/encryption";
+import { compareToken, hashToken } from "../../utils/encryption";
 
 export async function preSaveUser(this: any, next: any) {
     if(this.isNew || this.isModified("password"))
