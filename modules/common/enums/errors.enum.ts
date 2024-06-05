@@ -4,6 +4,8 @@ export const enum ErrorMessages {
     PASSWORDS_DONT_MATCH = "Passwords don't match!.",
     UNAUTHORIZED = "Unauthorized user.",
     INVALID_TOKEN = "Invalid authentication token.",
-    ADMIN_ONLY = "Only admins are allowed."
+    ADMIN_ONLY = "Only admins are allowed.",
+    NO_REFRESH_TOKEN = 'Refresh token not found.',
+    REFRESH_TOKEN_INCORRECT = "Refresh token is incorrect",
 }
 

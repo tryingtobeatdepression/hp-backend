@@ -1,6 +1,6 @@
 import { Document, Schema, model, } from "mongoose";
 import { UserRoles } from "./enums";
-import { generateRefreshToken, generateToken, isPasswordCorrect, preSaveUser } from "../../mongo/util/methods";
+import { generateRefreshToken, generateAccessToken, isPasswordCorrect, preSaveUser } from "../../mongo/util/methods";
 
 export interface IUser extends Document {
     username: string
@@ -55,7 +55,7 @@ const userSchema = new Schema<IUser>({
 
 userSchema.pre('save', preSaveUser)
 userSchema.methods.isPasswordCorrect = isPasswordCorrect
-userSchema.methods.generateToken = generateToken
+userSchema.methods.generateAccessToken = generateAccessToken
 userSchema.methods.generateRefreshToken = generateRefreshToken
 
 // Create User model

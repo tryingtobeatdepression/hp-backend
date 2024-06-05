@@ -1,4 +1,4 @@
-import { CreateOptions, FilterQuery, Model, ObjectId } from "mongoose";
+import { CreateOptions, FilterQuery, Model, ObjectId, UpdateQuery } from "mongoose";
 
 export default class CrudRepository<T> {
     model: Model<T>
@@ -22,8 +22,8 @@ export default class CrudRepository<T> {
         return this.model.create(payload, options)
     }
 
-    async updateById( id: string, payload: Object) {
-        return this.model.findByIdAndUpdate(id,payload,{ new: true, runValidators: true })
+    async updateById(id: string, payload: Object) {
+        return this.model.findByIdAndUpdate(id, payload, { new: true, runValidators: true })
     }
 
     async deleteById(id: string) {

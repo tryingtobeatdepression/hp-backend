@@ -13,10 +13,8 @@ export const isAuthenticated =
             return next(new AppError(ErrorMessages.UNAUTHORIZED, 401))
 
         verify(token, process.env.JWT_SECRET_KEY!, async (err: any, decoded: any) => {
-            // Error: Cannot decode token
             if (err) return next(new AppError(ErrorMessages.INVALID_TOKEN, 401))
 
-            // Check if user exists
             const user = await userRepo.findById(decoded?.id!)
             const org = await organizationRepo.findById(decoded?.id!)
 

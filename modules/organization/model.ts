@@ -1,6 +1,6 @@
 import { Document, Schema, model } from "mongoose";
 import { OrgTypes } from "./enums";
-import { generateRefreshToken, generateToken, isPasswordCorrect, preSaveUser } from "../../mongo/util/methods";
+import { generateRefreshToken, generateAccessToken, isPasswordCorrect, preSaveUser } from "../../mongo/util/methods";
 
 export interface IOrganziation extends Document {
     name: string
@@ -43,7 +43,7 @@ const orgSchema = new Schema<IOrganziation>({
 orgSchema.pre('save', preSaveUser)
 
 orgSchema.methods.isPasswordCorrect = isPasswordCorrect
-orgSchema.methods.generateToken = generateToken
+orgSchema.methods.generateAccessToken = generateAccessToken
 orgSchema.methods.generateRefreshToken = generateRefreshToken
 
 export const Organization = model<IOrganziation>('Organization', orgSchema)
