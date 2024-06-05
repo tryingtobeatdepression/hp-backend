@@ -2,7 +2,6 @@ import { NextFunction, Request, Response } from "express";
 import { ErrorMessages } from "../common/enums/errors.enum";
 import { userRepo } from "../../mongo/repositories/user.repo";
 import { compareToken } from "../../utils/encryption";
-import { sign } from "jsonwebtoken";
 import catchAsync from "../../utils/catch-async";
 import { organizationRepo } from "../organization/repository";
 
@@ -22,20 +21,19 @@ export const login = (isOrg: boolean = false) => {
             return res.status(400).json({
                 error: ErrorMessages.PASSWORDS_DONT_MATCH,
             })
-        // Create JWT token
-        const token = sign(
-            {
-                id: user._id,
-                email,
-                role: user.role,
-            },
-            process.env.JWT_SECRET_KEY!,
-            {
-                expiresIn: process.env.JWT_EXPIRATION_TIME!,
-            }
-        )
+        
+                // Generate an access token and a refresh token
+        const accessToken = user.generateAccessToken();
+        const refreshToken = user.generateRefreshToken();
+
+        // Save the refresh token to the user in the database
+        user.refreshToken = refreshToken;
+        await user.save({ validateBeforeSave: false });
+
         res.status(200).json({
-            token, user
+            accessToken,
+            refreshToken,
+            user
         })
     }))
 }

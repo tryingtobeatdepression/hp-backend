@@ -1,6 +1,6 @@
 import { Document, Schema, model } from "mongoose";
 import { OrgTypes } from "./enums";
-import { preSaveUser } from "../../mongo/util/methods";
+import { generateRefreshToken, generateToken, isPasswordCorrect, preSaveUser } from "../../mongo/util/methods";
 
 export interface IOrganziation extends Document {
     name: string
@@ -8,6 +8,7 @@ export interface IOrganziation extends Document {
     password: string
     overview: string
     role: string
+    refreshToken: string
 }
 
 const orgSchema = new Schema<IOrganziation>({
@@ -25,6 +26,7 @@ const orgSchema = new Schema<IOrganziation>({
         enum: OrgTypes,
         default: OrgTypes.OTHER,
     },
+    refreshToken: String,
 }, {
     timestamps: true,
     toJSON: {
@@ -32,11 +34,16 @@ const orgSchema = new Schema<IOrganziation>({
         transform: (doc, ret) => {
             delete ret._id
             delete ret.__v
+            delete ret.refreshToken
         }
     }
 })
 
 
 orgSchema.pre('save', preSaveUser)
+
+orgSchema.methods.isPasswordCorrect = isPasswordCorrect
+orgSchema.methods.generateToken = generateToken
+orgSchema.methods.generateRefreshToken = generateRefreshToken
 
 export const Organization = model<IOrganziation>('Organization', orgSchema)
