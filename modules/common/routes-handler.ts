@@ -6,6 +6,7 @@ import * as projectRouter from "../project/routes";
 import * as impactFundsRouter from "../impact-funds/routes";
 import * as organizationRouter from "../organization/routes";
 import * as organizationExperienceRouter from "../organization-experience/routes";
+import * as artifactRouter from "../artifact/routes";
 
 export default function (app: Express) {
     app.use('/api/users/', userRouter.router)
@@ -15,5 +16,6 @@ export default function (app: Express) {
     app.use('/api/impact-funds', impactFundsRouter.router)
     app.use('/api/orgs', organizationRouter.router)
     app.use('/api/organization-experiences', organizationExperienceRouter.router)
-
+    app.use('/api/artifacts', artifactRouter.router)
+    
 }

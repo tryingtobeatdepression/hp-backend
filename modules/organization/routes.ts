@@ -4,13 +4,11 @@ import { isAuthenticated } from '../../middleware/auth'
 import { UserRoles } from '../user/enums'
 import { OrgTypes } from './enums'
 import { validateObjectId } from '../../middleware/validate-objectId'
-import { router as artifactRouter }  from '../artifact/routes'
 import { restrictTo } from '../../middleware/restrict-to'
 import { checkRefId } from '../../middleware/check-ref-id'
 import { organizationRepo } from './repository'
 
 export const router: Router = Router()
-router.use('/:orgid/artifacts', artifactRouter)
 
 router.route('/')    // TESTED ✅
     .get(controller.list)

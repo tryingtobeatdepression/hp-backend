@@ -8,9 +8,8 @@ import { restrictTo } from '../../middleware/restrict-to'
 import { validateBody } from '../../middleware/validate-body'
 import { artifactValidationSchema } from './validation.schema'
 
-export const router: Router = Router({
-    mergeParams: true,
-})
+// 
+export const router: Router = Router()
 
 router.route('/')
     .get(controller.list)
