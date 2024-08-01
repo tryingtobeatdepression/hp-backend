@@ -2,20 +2,21 @@ import CrudRepository from "../../mongo/repositories/crud.repo";
 import {NextFunction,Request, Response} from "express";
 import catchAsync from "../../utils/catch-async";
 import {AppError} from "./errors";
+import {APIFeatures} from "../../utils/api-feature";
 
-const getAll = (repositry: CrudRepository<any>) =>
+const getAll = (repository: CrudRepository<any>) =>
     catchAsync(async (req: Request, res: Response, next: NextFunction) => {
-        const docs = await repositry.findAll();
+        const docs = await repository.findAll(req.query)
         res.status(200).json({
             status: 'success',
             results: docs
         });
     });
 
-const getOne = (repositry: CrudRepository<any>) =>
+const getOne = (repository: CrudRepository<any>) =>
     catchAsync(async (req: Request, res: Response, next: NextFunction) => {
         const id = req.params.id;
-        const document = await repositry.findById(id);
+        const document = await repository.findById(id);
         if (!document) {
             return next(new AppError("No document found with that ID", 404));
         }
@@ -25,19 +26,19 @@ const getOne = (repositry: CrudRepository<any>) =>
         });
     });
 
-const create = (repositry: CrudRepository<any>) =>
+const create = (repository: CrudRepository<any>) =>
     catchAsync(async (req: Request, res: Response, next: NextFunction) => {
-        const document = await repositry.create(req.body);
+        const document = await repository.create(req.body);
         res.status(200).json({
             status: 'success',
             document
         });
     });
 
-const update = (repositry: CrudRepository<any>) =>
+const update = (repository: CrudRepository<any>) =>
     catchAsync(async (req: Request, res: Response, next: NextFunction) => {
         const id = req.params.id;
-        const document = await repositry.updateById(id, req.body);
+        const document = await repository.updateById(id, req.body);
         if (!document) {
             return next(new AppError("No document found with that ID", 404));
         }
@@ -47,10 +48,10 @@ const update = (repositry: CrudRepository<any>) =>
         });
     });
 
-const destroy = (repositry: CrudRepository<any>) =>
+const destroy = (repository: CrudRepository<any>) =>
     catchAsync(async (req: Request, res: Response, next: NextFunction) => {
         const id = req.params.id;
-        const document = await repositry.deleteById(id);
+        const document = await repository.deleteById(id);
         if (!document) {
             return next(new AppError("No document found with that ID", 404));
         }
