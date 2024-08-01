@@ -8,6 +8,9 @@ export interface IExperience extends Document {
     id: string
     title: string;
     description: string;
+    overview: string;
+    status: string;
+    capacity: number; 
     itinerary: Array<ItineraryItem>
     duration: string
     rating: Number
@@ -20,6 +23,15 @@ const schema = new Schema<IExperience>(
         title: {
             type: String,
             required: true,
+        },
+        overview:  {
+            type: String,
+        },
+        status: {
+            type: String,
+        },
+        capacity: {
+            type: Number,
         },
         description: {
             type: String,
@@ -44,6 +56,7 @@ const schema = new Schema<IExperience>(
         ],
         media: [String]
     },{
+        timestamps:true,
         toJSON: {
             virtuals: true,
             transform: function(document, ret) {
