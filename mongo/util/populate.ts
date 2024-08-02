@@ -11,7 +11,7 @@ const getAllPopulatePaths = (schema: Schema) => {
 };
 
 export const populateAll = 
-async (model: Model<any>, filter?: FilterQuery<any>, propertiesToExclude = [
+(model: Model<any>, filter?: FilterQuery<any>, propertiesToExclude = [
     '_id', 'password', 'updatedAt', 'createdAt', 'refreshToken'
 ]) => {
     const schemaPaths = getAllPopulatePaths(model.schema);
@@ -26,7 +26,7 @@ async (model: Model<any>, filter?: FilterQuery<any>, propertiesToExclude = [
         query = query.populate(option);
     });
 
-    return await query.exec();
+    return  query
 }
 
 
