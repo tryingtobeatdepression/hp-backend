@@ -1,9 +1,13 @@
+import { Schema } from "mongoose"
+import { getAllPopulatePaths } from "../mongo/util/populate"
+
 interface QueryObject {
   find: (filter: any) => QueryObject
   sort: (sortBy: string) => QueryObject
   select: (fields: string) => QueryObject
   skip: (skip: number) => QueryObject
   limit: (limit: number) => QueryObject
+  populate: (option: any) => QueryObject
 }
 
 interface QueryString {
@@ -11,12 +15,31 @@ interface QueryString {
 }
 
 export class APIFeatures {
-   query: QueryObject
-   queryString: QueryString
+  query: QueryObject
+  queryString: QueryString
+  schema: Schema
 
-  constructor(query: QueryObject, queryString: QueryString) {
+  constructor(query: QueryObject, queryString: QueryString, schema: Schema) {
     this.query = query
     this.queryString = queryString
+    this.schema = schema
+  }
+
+  
+  populate(): this {
+    const schemaPaths = getAllPopulatePaths(this.schema);
+    const propertiesToExclude = [
+      '_id', 'password', 'updatedAt', 'createdAt', 'refreshToken'
+    ]
+    const selectStr = propertiesToExclude.map(prop => `-${prop}`).join(' ');
+    const populateOptions = schemaPaths.map(path => ({
+        path,
+        select: selectStr,
+    }));
+    populateOptions.forEach(option => {
+      this.query = this.query.populate(option);
+    })
+    return this
   }
 
   filter(): this {
