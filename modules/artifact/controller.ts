@@ -13,14 +13,7 @@ export const create = catchAsync(async (req: Request, res: Response, next: NextF
     });
 })
 
-export const list = catchAsync(async (req: Request, res: Response, next: NextFunction) => {
-    // const orgId = req.params['orgid']
-    const document = await artifactRepo.findAll();
-    res.status(200).json({
-        status: 'success',
-        document
-    });
-})
+export const list = factory.getAll(artifactRepo)
 
 export const findOne = factory.getOne(artifactRepo)
 

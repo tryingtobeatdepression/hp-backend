@@ -11,7 +11,6 @@ export const artifactValidationSchema = [
     body('media').isArray(),
     body('discoveryLocation').isString(),
     body('age').isString(),
-    body('deminsions').isArray(),
     body('indexCode').isString(),
     body('currentLocation').isString(),
 ]
