@@ -11,10 +11,9 @@ export default class CrudRepository<T> {
     async findAll(query?: any, filter?: FilterQuery<any>) {
         const results = populateAll(this.model, filter!);
         
-        const apiFeatures = new APIFeatures(this.model.find(filter!), query)
+        const apiFeatures = new APIFeatures(results, query)
         .filter().paginate().sort().limitFields()
         return apiFeatures.query
-        // return results
     }
 
     async findOne(filter: FilterQuery<any>) {
