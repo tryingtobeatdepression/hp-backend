@@ -32,7 +32,7 @@ const getOne = (repository: CrudRepository<any>) =>
 const create = (repository: CrudRepository<any>, idsMappings?: IdsMappings) =>
     catchAsync(async (req: Request, res: Response, next: NextFunction) => {
         if (idsMappings) {
-            for (const [idKey, attrName] of Object.entries(idsMappings!)) {
+            for (const [idKey, attrName] of Object.entries(idsMappings)) {
                 if (req.body[idKey] !== undefined) {
                     req.body[attrName] = req.body[idKey];
                     delete req.body[idKey]; 

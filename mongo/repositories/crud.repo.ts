@@ -7,8 +7,8 @@ export default class CrudRepository<T> {
         this.model = model
     }
 
-    async findAll(query?: any, filter?: FilterQuery<any>) {        
-        const apiFeatures = new APIFeatures(this.model.find(filter!), query, this.model.schema)
+    async findAll(query?: any) {        
+        const apiFeatures = new APIFeatures(this.model.find(), query, this.model.schema)
         .populate().filter().paginate().sort().limitFields()
         return apiFeatures.query
     }
