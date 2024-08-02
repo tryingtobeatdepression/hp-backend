@@ -1,5 +1,6 @@
 import { CreateOptions, FilterQuery, Model, ObjectId, UpdateQuery } from "mongoose";
 import { APIFeatures } from "../../utils/api-feature";
+import { populateAll } from "../util/populate";
 
 export default class CrudRepository<T> {
     model: Model<T>
@@ -8,9 +9,12 @@ export default class CrudRepository<T> {
     }
 
     async findAll(query?: any, filter?: FilterQuery<any>) {
+        const results = populateAll(this.model, filter!);
+        
         const apiFeatures = new APIFeatures(this.model.find(filter!), query)
         .filter().paginate().sort().limitFields()
         return apiFeatures.query
+        // return results
     }
 
     async findOne(filter: FilterQuery<any>) {
