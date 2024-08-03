@@ -7,6 +7,8 @@ import { validateObjectId } from '../../middleware/validate-objectId'
 import { restrictTo } from '../../middleware/restrict-to'
 import { validateBody } from '../../middleware/validate-body'
 import { artifactValidationSchema } from './validation.schema'
+import { checkRefId } from '../../middleware/check-ref-id'
+import { organizationRepo } from '../organization/repository'
 
 // 
 export const router: Router = Router()
@@ -18,6 +20,7 @@ router.route('/')
         restrictTo([OrgTypes.MUSUEM, UserRoles.ADMIN]),
         artifactValidationSchema,
         validateBody,
+        checkRefId(organizationRepo, "organization"),
         controller.create
     )
 
