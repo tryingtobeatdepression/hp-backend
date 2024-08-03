@@ -21,7 +21,6 @@ router.route('/:id') // TESTED ✅
     )
     .patch( 
         validateObjectId,
-        checkRefId(organizationRepo),
         isAuthenticated,
         restrictTo([...Object.values(OrgTypes), UserRoles.ADMIN]),
         controller.update

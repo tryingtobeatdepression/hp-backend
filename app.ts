@@ -16,9 +16,7 @@ declare global {
     }
 }
 
-// Mongoose configuration of `app`
 dbConfig()
-// Routes handler of all `app` routers
 routesHandler(app)
 app.use(globalError);
 

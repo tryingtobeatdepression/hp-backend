@@ -3,10 +3,6 @@ import {NextFunction,Request, Response} from "express";
 import catchAsync from "../../utils/catch-async";
 import {AppError} from "./errors";
 
-interface IdsMappings {
-    [key: string]: string
-}
-
 const getAll = (repository: CrudRepository<any>) =>
     catchAsync(async (req: Request, res: Response, next: NextFunction) => {
         const docs = await repository.findAll(req.query)
@@ -29,16 +25,8 @@ const getOne = (repository: CrudRepository<any>) =>
         });
     });
 
-const create = (repository: CrudRepository<any>, idsMappings?: IdsMappings) =>
+const create = (repository: CrudRepository<any>) =>
     catchAsync(async (req: Request, res: Response, next: NextFunction) => {
-        if (idsMappings) {
-            for (const [idKey, attrName] of Object.entries(idsMappings)) {
-                if (req.body[idKey] !== undefined) {
-                    req.body[attrName] = req.body[idKey];
-                    delete req.body[idKey]; 
-                }
-            } 
-        }
         const document = await repository.create(req.body);
         res.status(200).json({
             status: 'success',

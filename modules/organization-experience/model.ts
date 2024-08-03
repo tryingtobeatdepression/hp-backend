@@ -38,12 +38,12 @@ const schema = new Schema<IOrganizationExperience>({
         type: Number
     },
     bookedSeats: {
-        type: Number
+        type: Number,
+        default: 0,
     },
     registrationStartDate:{
         type: Date,
         default: null
-
     },
     registrationEndDate: {
         type: Date,
