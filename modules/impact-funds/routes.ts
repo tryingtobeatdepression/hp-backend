@@ -13,3 +13,6 @@ router.route('/:id')
     .get(validateObjectId,controller.getOne)
     .delete(validateObjectId,controller.destroy)
 
+router.route('/:id/donate') 
+    .post(controller.makeDonation)
+

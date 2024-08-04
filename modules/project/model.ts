@@ -6,6 +6,8 @@ export interface IProject extends Document {
     description: string;
     location: string
     startingPoint: string
+    status: string
+    isEducational: boolean
 }
 
 const schema = new Schema<IProject>(
@@ -24,6 +26,10 @@ const schema = new Schema<IProject>(
         startingPoint: {
             type: String,
         },
+        isEducational: {
+            type: Boolean,
+            default: false,
+        }
     },{
         timestamps: true,
         toJSON: {

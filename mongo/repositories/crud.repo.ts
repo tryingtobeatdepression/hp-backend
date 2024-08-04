@@ -25,7 +25,7 @@ export default class CrudRepository<T> {
         return this.model.create(payload, options)
     }
 
-    async updateById(id: string, payload: Object) {
+    async updateById(id: string, payload: UpdateQuery<T>) {
         return this.model.findByIdAndUpdate(id, payload, { new: true, runValidators: true })
     }
 

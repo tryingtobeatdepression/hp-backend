@@ -20,7 +20,7 @@ const schema = new Schema({
     bookingDate: {
         type: Date,
         default: Date.now()
-    }
+    }   
 }, {
     timestamps: true,
     toJSON: {
