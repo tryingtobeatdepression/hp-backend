@@ -7,6 +7,7 @@ import * as impactFundsRouter from "../impact-funds/routes";
 import * as organizationRouter from "../organization/routes";
 import * as organizationExperienceRouter from "../organization-experience/routes";
 import * as artifactRouter from "../artifact/routes";
+import * as userExpBookingRouter from '../user-exp-booking/routes'
 
 export default function (app: Express) {
     app.use('/api/users/', userRouter.router)
@@ -17,5 +18,5 @@ export default function (app: Express) {
     app.use('/api/orgs', organizationRouter.router)
     app.use('/api/organization-experiences', organizationExperienceRouter.router)
     app.use('/api/artifacts', artifactRouter.router)
-    
+    app.use('/api/user-bookings', userExpBookingRouter.router)
 }

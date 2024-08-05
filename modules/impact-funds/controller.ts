@@ -16,11 +16,12 @@ export const makeDonation = catchAsync(async (req: Request, res: Response, next:
     if(!await doc.addDonor({ donation: amount, }))
         return next(new AppError("Amount excceds total amount.", 400))
 
-    const paymentIntent = await stripe.paymentIntents.create({
-        amount,
-        currency: 'usd',
-    })
-    
+    const paymentMethod = await stripe.createCardPaymentMethod()
+    const customer = await stripe.createCustomer("Donor")
+    const paymentIntent = await stripe.createPaymentIntent(
+        amount, paymentMethod.id, customer.id
+    )
+
     res.send({
         clientSecret: paymentIntent.client_secret,
     })

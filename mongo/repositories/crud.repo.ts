@@ -21,7 +21,7 @@ export default class CrudRepository<T> {
         return this.model.findOne({ _id: id, })
     }
 
-    async create(payload: Object, options?: CreateOptions) {
+    async create(payload: any, options?: CreateOptions) {
         return this.model.create(payload, options)
     }
 
