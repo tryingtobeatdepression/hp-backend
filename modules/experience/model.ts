@@ -1,4 +1,4 @@
-import mongoose, { Schema, Document, Model, Types } from 'mongoose'
+import mongoose, { Schema, Document, Model, Types, ClientSession } from 'mongoose'
 
 interface ItineraryItem { milestoneName: string, location: string }
 
@@ -30,8 +30,7 @@ export interface IExperience extends Document {
     rating: number
 
     hasSeats(this: IExperience): boolean
-    book(this: IExperience): Promise<void>
-    getStatus(this: IExperience): string
+    book(this: IExperience, session: ClientSession): Promise<void>
     rate(this: IExperience, rating: any): Promise<void>
 }
 
@@ -59,6 +58,7 @@ const schema = new Schema<IExperience>(
         },
         status: {
             type: String,
+            default: 'available',
         },
         capacity: {
             type: Number,
@@ -120,13 +120,9 @@ schema.method("hasSeats", function (this: IExperience) {
     return this.capacity < this.bookedSeats
 })
 
-schema.method("getStatus", function (this: IExperience) {
-    return this.hasSeats() ? 'available' : 'closed'
-})
-
-schema.method("book", async function (this: IExperience) {
+schema.method("book", async function (this: IExperience, session: ClientSession) {
     ++this.bookedSeats
-    await this.save()
+    await this.save({ session, })
 })
 
 schema.method("rate", async function (this: IExperience, rating: any) {

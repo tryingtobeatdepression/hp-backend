@@ -1,4 +1,4 @@
-import { CreateOptions, FilterQuery, Model, ObjectId, UpdateQuery } from "mongoose";
+import { ClientSession, CreateOptions, FilterQuery, Model, ObjectId, UpdateQuery } from "mongoose";
 import { APIFeatures } from "../../utils/api-feature";
 
 export default class CrudRepository<T> {
@@ -13,12 +13,8 @@ export default class CrudRepository<T> {
         return apiFeatures.query
     }
 
-    async findOne(filter: FilterQuery<any>) {
-        return this.model.findOne(filter,)
-    }
-
-    async findById(id: string) {
-        return this.model.findOne({ _id: id, })
+    async findById(id: string, session?: ClientSession) {
+        return this.model.findOne({ _id: id, }).session(session!)
     }
 
     async create(payload: any, options?: CreateOptions) {
