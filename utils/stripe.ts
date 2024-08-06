@@ -29,6 +29,7 @@ class StripeService {
             currency: 'usd',
             payment_method: pmid,
             customer: cid,
+            confirm: true,
             // receipt_email: 'xxx@mail.com'
         })
     }

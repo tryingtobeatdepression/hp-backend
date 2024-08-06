@@ -3,30 +3,28 @@ import catchAsync from "../../utils/catch-async";
 import { factory } from "../common/handler-factory";
 import { userExpBookingRepo } from "./repository";
 import { stripe } from "../../utils/stripe";
-import { organizationExperienceRepository } from "../organization-experience/repository";
 import { userRepo } from "../../mongo/repositories/user.repo";
 import { AppError } from "../common/errors";
+import { experienceRepository } from "../experience/repository";
 
 export const create = catchAsync(async (req: Request, res: Response, next: any) => {
-    const { user, orgExperience } = req.body;
+    const { user, experience } = req.body;
     if (! await userRepo.findById(user))
         return next(new AppError("User doesn't exist.", 400))
 
-    const oe = await organizationExperienceRepository.findById
-        (orgExperience)
-    if (!oe)
+    const e = await experienceRepository.findById
+        (experience)
+    if (!e)
         return next(new AppError("Org experience doesn't exist.", 400))
 
     const paymentMethod = await stripe.createCardPaymentMethod()
     const customer = await stripe.createCustomer("User-Booking")
     const paymentIntent = await stripe.createPaymentIntent(
-        oe.pricePerIndividual, paymentMethod.id, customer.id
+        e.cost, paymentMethod.id, customer.id
     )
-    await userExpBookingRepo.create({ user, orgExperience })
+    await userExpBookingRepo.create({ user, experience })
 
-    res.send({
-        clientSecret: paymentIntent.client_secret,
-    })
+    return res.send('hi')
 })
 
 export const list = factory.getAll(userExpBookingRepo)

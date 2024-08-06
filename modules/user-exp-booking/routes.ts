@@ -2,7 +2,7 @@ import { Router } from 'express'
 import * as controller from './controller'
 import { checkRefId } from '../../middleware/check-ref-id'
 import { userRepo } from '../../mongo/repositories/user.repo'
-import { organizationExperienceRepository } from '../organization-experience/repository'
+import { experienceRepository } from '../experience/repository'
 
 export const router: Router = Router()
 
@@ -10,7 +10,7 @@ router.route('/')
     .get(controller.list)
     .post(
         checkRefId(userRepo, "user"),
-        checkRefId(organizationExperienceRepository, "orgExperience"),
+        checkRefId(experienceRepository, "experience"),
         controller.create
     )
 

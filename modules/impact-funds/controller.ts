@@ -22,9 +22,11 @@ export const makeDonation = catchAsync(async (req: Request, res: Response, next:
         amount, paymentMethod.id, customer.id
     )
 
-    res.send({
-        clientSecret: paymentIntent.client_secret,
-    })
+    console.log(`payment sts: ${paymentIntent.status}`)
+    if(paymentIntent.status !== 'succeeded')
+        return next(new AppError("Payment failed.", 500))
+
+    res.send('hi')
 })
 
 export const getAll = factory.getAll(impactFundsRepository)
