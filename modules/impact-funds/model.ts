@@ -16,7 +16,8 @@ export interface IImpactFunds extends Document {
     donors: Array<DonorObject>
     status: string
     
-    addDonor(this: IImpactFunds, donor: DonorObject): Promise<boolean>
+    addDonor(this: IImpactFunds, donor: DonorObject): Promise<void>
+    hasExceeded(this: IImpactFunds, donation: number): boolean
 }
 
 const schema = new Schema<IImpactFunds>(
@@ -66,16 +67,14 @@ const schema = new Schema<IImpactFunds>(
     }
 })
 
-schema.method("addDonor", async function (this: IImpactFunds, donor: DonorObject): Promise<boolean> {
-    const newAllocatedAmount = this.allocatedAmount + donor.donation;
-    if (newAllocatedAmount > this.totalAmount)
-        return false;
+schema.method('hasExceeded', function (this: IImpactFunds, donation: number): boolean {
+    return this.allocatedAmount + donation > this.totalAmount
+}) 
 
+schema.method("addDonor", async function (this: IImpactFunds, donor: DonorObject): Promise<void> {
     this.donors.push(donor);
-    this.allocatedAmount = newAllocatedAmount;
-
+    this.allocatedAmount += donor.donation;
     await this.save();
-    return true;
 })
 
 schema.pre('save', async function (this) {

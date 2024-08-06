@@ -22,9 +22,15 @@ export const create = catchAsync(async (req: Request, res: Response, next: any) 
     const paymentIntent = await stripe.createPaymentIntent(
         e.cost, paymentMethod.id, customer.id
     )
+
+    if(paymentIntent.status !== 'succeeded') 
+        return next(new AppError("Payment failed", 500))
+    
     await userExpBookingRepo.create({ user, experience })
 
-    return res.send('hi')
+    return res.status(201).json({
+        status: 'success',
+    })
 })
 
 export const list = factory.getAll(userExpBookingRepo)

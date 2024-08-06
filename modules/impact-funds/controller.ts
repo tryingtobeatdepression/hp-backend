@@ -13,7 +13,7 @@ export const makeDonation = catchAsync(async (req: Request, res: Response, next:
     if(!doc)
         return next(new AppError("Fund doesn't exist.", 403))
     
-    if(!await doc.addDonor({ donation: amount, }))
+    if(doc.hasExceeded(amount))
         return next(new AppError("Amount excceds total amount.", 400))
 
     const paymentMethod = await stripe.createCardPaymentMethod()
@@ -22,11 +22,14 @@ export const makeDonation = catchAsync(async (req: Request, res: Response, next:
         amount, paymentMethod.id, customer.id
     )
 
-    console.log(`payment sts: ${paymentIntent.status}`)
     if(paymentIntent.status !== 'succeeded')
         return next(new AppError("Payment failed.", 500))
 
-    res.send('hi')
+    doc.addDonor({ donation: amount, })
+    
+    res.status(201).json({
+        status: 'success',
+    })
 })
 
 export const getAll = factory.getAll(impactFundsRepository)
