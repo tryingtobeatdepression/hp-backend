@@ -4,16 +4,12 @@ interface ItineraryItem { milestoneName: string, location: string }
 
 interface IncludesObject { description: string, icon: string }
 
-interface IRating extends Document {
-    email: string
-    val: number
-}
+interface Rating { email: string, val: number }
 
 export interface IExperience extends Document {
     id: string
     title: string;
     description: string;
-    overview: string;
     status: string;
     capacity: number;
     cost: number;
@@ -22,7 +18,7 @@ export interface IExperience extends Document {
     registrationEndDate: Date
     itinerary: Array<ItineraryItem>
     duration: string
-    ratings: Types.DocumentArray<IRating>,
+    ratings: Array<Rating>,
     includes: Array<IncludesObject>
     media: string[]
 
@@ -34,27 +30,11 @@ export interface IExperience extends Document {
     rate(this: IExperience, rating: any): Promise<void>
 }
 
-
-const ratingSchema = new Schema<IRating>(
-    {
-        email: String,
-        val: {
-            type: Number,
-            min: 1,
-            max: 5,
-            required: true,
-        }
-    }
-)
-
 const schema = new Schema<IExperience>(
     {
         title: {
             type: String,
             required: true,
-        },
-        overview: {
-            type: String,
         },
         status: {
             type: String,
@@ -63,7 +43,10 @@ const schema = new Schema<IExperience>(
         capacity: {
             type: Number,
         },
-        cost: Number,
+        cost: {
+            type: Number,
+            min: 0,
+        },
         bookedSeats: {
             type: Number,
             default: 0,
@@ -85,7 +68,15 @@ const schema = new Schema<IExperience>(
             location: String,
         }],
         duration: String,
-        ratings: [ratingSchema],
+        ratings: [{
+            email: String,
+            val: {
+                type: Number,
+                min: 1,
+                max: 5,
+                required: true,
+            }
+        }],
         includes: [
             {
                 description: String,
