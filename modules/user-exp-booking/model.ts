@@ -1,10 +1,10 @@
 import { Document, Schema, Types, model } from "mongoose";
 import { IUser } from "../user/model";
-import { IOrganizationExperience } from "../organization-experience/model";
+import { IExperience } from "../experience/model";
 
 export interface IUserExpBooking extends Document {
     user: IUser['_id']
-    orgExperience: IOrganizationExperience['_id']
+    experience: IExperience['_id']
     bookingDate: Date,
 }
 
@@ -13,9 +13,9 @@ const schema = new Schema({
         type: Types.ObjectId,
         ref: "User"
     },
-    orgExperience: {
+    experience: {
         type: Types.ObjectId,
-        ref: "OrganizationExperience"
+        ref: "Experience"
     },
     bookingDate: {
         type: Date,
