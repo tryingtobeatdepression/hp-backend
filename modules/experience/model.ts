@@ -7,7 +7,7 @@ interface IncludesObject { description: string, icon: string }
 interface Rating { email: string, val: number }
 
 export interface IExperience extends Document {
-    id: string
+    // id: string
     title: string;
     description: string;
     status: string;
@@ -20,13 +20,13 @@ export interface IExperience extends Document {
     duration: string
     ratings: Array<Rating>,
     includes: Array<IncludesObject>
-    media: string[]
+    media: Array<string>
 
     // virtuals
     rating: number
 
     hasSeats(this: IExperience): boolean
-    book(this: IExperience, session: ClientSession): Promise<void>
+    book(this: IExperience, session?: ClientSession): Promise<void>
     rate(this: IExperience, rating: any): Promise<void>
 }
 
@@ -45,7 +45,6 @@ const schema = new Schema<IExperience>(
         },
         cost: {
             type: Number,
-            min: 0,
         },
         bookedSeats: {
             type: Number,
@@ -83,7 +82,7 @@ const schema = new Schema<IExperience>(
                 icon: String,
             }
         ],
-        media: [String]
+        media: [String],
     }, {
     timestamps: true,
     toObject: { virtuals: true, },
@@ -93,6 +92,11 @@ const schema = new Schema<IExperience>(
             delete ret.__v;
             delete ret._id;
             ret.itinerary.map((obj: any): ItineraryItem => {
+                delete obj.id;
+                delete obj._id;
+                return obj
+            })
+            ret.ratings.map((obj: any): IncludesObject => {
                 delete obj.id;
                 delete obj._id;
                 return obj
@@ -108,11 +112,11 @@ const schema = new Schema<IExperience>(
 )
 
 schema.method("hasSeats", function (this: IExperience) {
-    return this.capacity < this.bookedSeats
+    return this.capacity < this.bookedSeats!
 })
 
-schema.method("book", async function (this: IExperience, session: ClientSession) {
-    ++this.bookedSeats
+schema.method("book", async function (this: IExperience, session?: ClientSession) {
+    ++this.bookedSeats!
     await this.save({ session, })
 })
 
@@ -129,7 +133,7 @@ schema.virtual("rating").get(function () {
         len
 })
 
-schema.pre('save', function (this: IExperience, next: any) {
+schema.pre('save', function (this: IExperience) {
     if (!this.hasSeats())
         this.status = "closed"
 })
