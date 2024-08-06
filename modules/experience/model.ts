@@ -11,6 +11,10 @@ export interface IExperience extends Document {
     overview: string;
     status: string;
     capacity: number; 
+    cost: number;
+    bookedSeats: number
+    registrationStartDate: Date
+    registrationEndDate: Date
     itinerary: Array<ItineraryItem>
     duration: string
     rating: Number
@@ -32,6 +36,19 @@ const schema = new Schema<IExperience>(
         },
         capacity: {
             type: Number,
+        },
+        cost: Number,
+        bookedSeats: {
+            type: Number,
+            default: 0,
+        },
+        registrationStartDate:{
+            type: Date,
+            default: null
+        },
+        registrationEndDate: {
+            type: Date,
+            default: null
         },
         description: {
             type: String,
