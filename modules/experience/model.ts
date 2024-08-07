@@ -112,7 +112,7 @@ const schema = new Schema<IExperience>(
 )
 
 schema.method("hasSeats", function (this: IExperience) {
-    return this.capacity < this.bookedSeats!
+    return this.capacity > this.bookedSeats
 })
 
 schema.method("book", async function (this: IExperience, session?: ClientSession) {

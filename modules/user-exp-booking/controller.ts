@@ -10,38 +10,37 @@ import { handleTransaction } from "../../mongo/util/transactions.handler";
 import { ClientSession } from "mongoose";
 
 export const create = catchAsync(async (req: Request, res: Response, next: any) => {
-    await handleTransaction(async (session: ClientSession) => {
-        const { user, experience } = req.body;
-        if (! await userRepo.findById(user, session))
-            return next(new AppError("User doesn't exist.", 400))
+    // await handleTransaction(async (session: ClientSession) => {
+    const { user, experience } = req.body;
 
-        const e = await experienceRepository.findById(experience, session)
+    if (! await userRepo.findById(user))
+        return next(new AppError("User doesn't exist.", 400))
 
-        if (!e)
-            return next(new AppError("Org experience doesn't exist.", 400))
-        // if (!e.hasSeats())
-        //     return res.status(409).json({
-        //         status: 'failure',
-        //         msg: 'No seats are availabe for this experience!.',
-        //     })
-
-        const paymentMethod = await stripe.createCardPaymentMethod()
-        const customer = await stripe.createCustomer("User-Booking")
-        const paymentIntent = await stripe.createPaymentIntent(
-            100, paymentMethod.id, customer.id
-        )
-
-        if (paymentIntent.status !== 'succeeded')
-            return next(new AppError("Payment failed", 500))
-
-
-        await userExpBookingRepo.create([{ user, experience }], { session })
-        // await e.book(session)
-
-        return res.status(201).json({
-            status: 'success',
+    const e = await experienceRepository.findById(experience)
+    if (!e)
+        return next(new AppError("Org experience doesn't exist.", 400))
+    if (!e.hasSeats())
+        return res.status(409).json({
+            status: 'failure',
+            msg: 'No seats are availabe for this experience!.',
         })
+
+    const paymentMethod = await stripe.createCardPaymentMethod()
+    const customer = await stripe.createCustomer("User-Booking")
+    const paymentIntent = await stripe.createPaymentIntent(
+        e.cost, paymentMethod.id, customer.id
+    )
+
+    if (paymentIntent.status !== 'succeeded')
+        return next(new AppError("Payment failed", 500))
+
+    await userExpBookingRepo.create({ user, experience })
+    await e.book()
+
+    return res.status(201).json({
+        status: 'success',
     })
+    // })
 })
 
 export const list = factory.getAll(userExpBookingRepo)

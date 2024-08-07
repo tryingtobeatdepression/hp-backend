@@ -21,8 +21,11 @@ export const isAuthenticated =
             if (!user && !org)
                 return next(new AppError(ErrorMessages.USER_DOESNT_EXIST, 404))
 
+            const userId = String(user?._id);
+            const orgId = String(org?._id)
+
             req.user = {
-                id: user ? user._id : org?._id,
+                id: user ? userId : orgId,
                 role: user ? user.role : org?.role!
             }
             next()

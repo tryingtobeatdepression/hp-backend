@@ -7,18 +7,18 @@ export default class CrudRepository<T> {
         this.model = model
     }
 
-    async findAll(query?: any) {        
+    async findAll(query?: any) {
         const apiFeatures = new APIFeatures(this.model.find(), query, this.model.schema)
-        .populate().filter().paginate().sort().limitFields()
+            .populate().filter().paginate().sort().limitFields()
         return apiFeatures.query
     }
 
-    async findById(id: string, session?: ClientSession) {
-        return this.model.findOne({ _id: id, }).session(session!)
+    async findById(id: string,) {
+        return this.model.findOne({ _id: id, })
     }
 
-    async create(payload: any, options?: CreateOptions) {
-        return this.model.create(payload, options)
+    async create(payload: object, options?: CreateOptions) {
+        return await this.model.create(payload, options!)
     }
 
     async updateById(id: string, payload: UpdateQuery<T>) {
