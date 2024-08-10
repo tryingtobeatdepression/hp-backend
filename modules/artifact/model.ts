@@ -11,7 +11,7 @@ export interface IArtifact extends Document {
     discoveryLocation: string
     age: string
     material: string
-    dimensions: Array<Dimension>
+    dimensions: Dimension
     indexCode: string
     currentLocation: string
 }

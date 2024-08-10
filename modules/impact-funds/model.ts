@@ -40,11 +40,11 @@ const schema = new Schema<IImpactFunds>(
         },
         donors: [
             {
-                donation: Number,
-                type: {
-                    type: String,
-                    enum: ['visitor', 'organization'],
+                user: {
+                    type: Types.ObjectId,
+                    ref: "User",
                 },
+                donation: Number,
                 date: {
                     type: Date,
                     default: Date.now()
