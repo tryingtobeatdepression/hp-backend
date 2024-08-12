@@ -9,6 +9,7 @@ import { validateBody } from '../../middleware/validate-body'
 import { artifactValidationSchema } from './validation.schema'
 import { checkRefId } from '../../middleware/check-ref-id'
 import { organizationRepo } from '../organization/repository'
+import { uploadImages } from '../../middleware/upload-images'
 
 // 
 export const router: Router = Router()
@@ -21,6 +22,7 @@ router.route('/')
         artifactValidationSchema,
         validateBody,
         checkRefId(organizationRepo, "organization"),
+        uploadImages.array('media'),
         controller.create
     )
 
