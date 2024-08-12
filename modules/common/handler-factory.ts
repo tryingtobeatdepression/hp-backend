@@ -1,7 +1,8 @@
 import CrudRepository from "../../mongo/repositories/crud.repo";
 import {NextFunction,Request, Response} from "express";
 import catchAsync from "../../utils/catch-async";
-import {AppError} from "./errors";
+import { AppError } from "./errors";
+import { files } from "../../middleware/upload-images";
 
 const getAll = (repository: CrudRepository<any>) =>
     catchAsync(async (req: Request, res: Response, next: NextFunction) => {
@@ -28,6 +29,9 @@ const getOne = (repository: CrudRepository<any>) =>
 const create = (repository: CrudRepository<any>) =>
     catchAsync(async (req: Request, res: Response, next: NextFunction) => {
         const document = await repository.create(req.body);
+        if(files.length >= 0){
+         files.length = 0
+        }
         res.status(200).json({
             status: 'success',
             document
@@ -36,7 +40,7 @@ const create = (repository: CrudRepository<any>) =>
 
 const update = (repository: CrudRepository<any>) =>
     catchAsync(async (req: Request, res: Response, next: NextFunction) => {
-        const id = req.params.id;
+        const id = req.params.id
         const document = await repository.updateById(id, req.body);
         if (!document) {
             return next(new AppError("No document found with that ID", 404));
@@ -57,7 +61,7 @@ const destroy = (repository: CrudRepository<any>) =>
         res.status(204).json();
     });
 
-export const factory ={getAll,getOne,create,update,destroy};
+export const factory ={ getAll, getOne, create, update, destroy }
 
 // const getWord = (repoName: string): string | null => {
 //     const match = repoName.match(/^\s*(\S+)/);
