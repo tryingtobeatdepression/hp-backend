@@ -28,7 +28,7 @@ export class APIFeatures {
   populate(): this {
     const schemaPaths = getAllPopulatePaths(this.schema);
     const propertiesToExcluded = [
-      '_id', 'password', 'updatedAt', 'createdAt', 'refreshToken'
+      'password', 'updatedAt', 'createdAt', 'refreshToken'
     ]
     const selectStr = propertiesToExcluded.map(prop => `-${prop}`).join(' ');
     const populateOptions = schemaPaths.map(path => ({

@@ -7,7 +7,7 @@ interface IncludesObject { description: string, icon: string }
 interface Rating { email: string, val: number }
 
 export interface IExperience extends Document {
-    // id: string
+    id: string
     title: string;
     description: string;
     status: string;

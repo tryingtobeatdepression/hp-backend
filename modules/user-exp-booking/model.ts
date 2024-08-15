@@ -3,6 +3,7 @@ import { IUser } from "../user/model";
 import { IExperience } from "../experience/model";
 
 export interface IUserExpBooking extends Document {
+    id: string
     user: IUser['_id']
     experience: IExperience['_id']
     bookingDate: Date,

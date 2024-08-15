@@ -3,6 +3,7 @@ import { OrgTypes } from "./enums";
 import { generateRefreshToken, generateAccessToken, isPasswordCorrect, preSaveUser } from "../../mongo/util/methods";
 
 export interface IOrganziation extends Document {
+    id: string
     name: string
     email: string
     password: string

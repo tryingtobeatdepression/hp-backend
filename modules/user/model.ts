@@ -3,6 +3,7 @@ import { UserRoles } from "./enums";
 import { generateRefreshToken, generateAccessToken, isPasswordCorrect, preSaveUser } from "../../mongo/util/methods";
 
 export interface IUser extends Document {
+    id: string
     username: string
     name: string
     email: string

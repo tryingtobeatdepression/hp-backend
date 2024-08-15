@@ -4,6 +4,7 @@ import { IOrganziation } from "../organization/model";
 export interface Dimension { height: number, width: number, unit: string }
 
 export interface IArtifact extends Document {
+    id: string
     organization: IOrganziation['_id'],
     name: string
     description: string
@@ -44,5 +45,21 @@ const schema = new Schema({
         }
     }
 })
- 
+
+// schema.pre(/^find/, function (this: IArtifact | IArtifact[]) {
+//     const pop = {
+//         path: 'organization',
+//         select: '-createdAt -updatedAt -password'
+//     }
+
+//     if (Array.isArray(this)) {
+//         this.map(doc => {
+//             console.log(JSON.stringify(doc))
+//             doc.populate(pop)
+//         })
+//     } else {
+//         this.populate(pop)
+//     }
+// })
+
 export const Artifact = model<IArtifact>("Artifact", schema)
