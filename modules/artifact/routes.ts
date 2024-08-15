@@ -20,7 +20,6 @@ router.route('/')
         isAuthenticated,
         restrictTo([OrgTypes.MUSUEM, UserRoles.ADMIN]),
         artifactValidationSchema,
-        validateBody,
         checkRefId(organizationRepo, "organization"),
         uploadImages.array('media'),
         controller.create

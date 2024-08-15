@@ -8,7 +8,7 @@ export const artifactValidationSchema = [
     body('name').not().isNumeric().withMessage("Name can't be a number"),
 
     body('description').isString(),
-    body('media').isArray(),
+    // body('media').isArray(),
     body('discoveryLocation').isString(),
     body('age').isString(),
     body('indexCode').isString(),

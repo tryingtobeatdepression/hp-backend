@@ -10,5 +10,5 @@ export const experienceValidationSchema = [
     body("duration").isString(),
     body("rating").isNumeric(),
     body("includes").isArray().notEmpty(),
-    body("media").isArray(),
+    // body("media").isArray(),
 ]
