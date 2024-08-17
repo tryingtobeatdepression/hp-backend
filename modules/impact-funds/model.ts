@@ -77,6 +77,13 @@ schema.method("addDonor", async function (this: IImpactFunds, donor: DonorObject
     await this.save();
 })
 
+// schema.method("hi", async function(this: ) {
+//     const result = await this.aggregate([
+//         { $group: { _id: null, totalSum: { $sum: "$totalAmount" } } }
+//     ]);
+//     return result.length > 0 ? result[0].totalSum : 0;
+// });
+
 schema.pre('save', async function (this) {
     if (this.allocatedAmount == this.totalAmount) 
         this.status = "completed"

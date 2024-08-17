@@ -8,6 +8,7 @@ export interface IProject extends Document {
     startingPoint: string
     status: string
     isEducational: boolean
+    media: string[]
 }
 
 const schema = new Schema<IProject>(
@@ -29,7 +30,8 @@ const schema = new Schema<IProject>(
         isEducational: {
             type: Boolean,
             default: false,
-        }
+        },
+        media: Array<String>
     },{
         timestamps: true,
         toJSON: {
@@ -38,7 +40,6 @@ const schema = new Schema<IProject>(
                 delete ret.__v;
                 delete ret._id;
             },
-
         }
     }
 )
