@@ -1,4 +1,4 @@
-import mongoose, { Schema, Document, Types } from 'mongoose'
+import mongoose, { Schema, Document, Types, Model } from 'mongoose'
 import { IProject } from "../project/model";
 import { DonationType } from "./enums";
 
@@ -8,6 +8,7 @@ interface DonorObject {
     type?: DonationType
     date?: Date
 }
+
 export interface IImpactFunds extends Document {
     id: string
     project: IProject['_id'];
@@ -15,12 +16,17 @@ export interface IImpactFunds extends Document {
     allocatedAmount: number
     donors: Array<DonorObject>
     status: string
-    
+
     addDonor(this: IImpactFunds, donor: DonorObject): Promise<void>
     hasExceeded(this: IImpactFunds, donation: number): boolean
 }
 
-const schema = new Schema<IImpactFunds>(
+interface ImpactFundsModel extends Model<IImpactFunds> {
+    getEconomicImpact(): Promise<number>
+    getPeopleImpacted(): Promise<number>
+}
+
+const schema = new Schema<IImpactFunds, ImpactFundsModel>(
     {
         project: {
             type: Types.ObjectId,
@@ -35,8 +41,8 @@ const schema = new Schema<IImpactFunds>(
         },
         status: {
             type: String,
-            enum: ['pending', 'completed'],
-            default: "pending",
+            enum: ['live', 'completed'],
+            default: "live",
         },
         donors: [
             {
@@ -69,7 +75,7 @@ const schema = new Schema<IImpactFunds>(
 
 schema.method('hasExceeded', function (this: IImpactFunds, donation: number): boolean {
     return this.allocatedAmount + donation > this.totalAmount
-}) 
+})
 
 schema.method("addDonor", async function (this: IImpactFunds, donor: DonorObject): Promise<void> {
     this.donors.push(donor);
@@ -77,18 +83,33 @@ schema.method("addDonor", async function (this: IImpactFunds, donor: DonorObject
     await this.save();
 })
 
-// schema.method("hi", async function(this: ) {
-//     const result = await this.aggregate([
-//         { $group: { _id: null, totalSum: { $sum: "$totalAmount" } } }
-//     ]);
-//     return result.length > 0 ? result[0].totalSum : 0;
-// });
+// TESTED ✅
+schema.static("getEconomicImpact", async function () {
+    const result = await this.aggregate([
+        {
+            $group: {
+                _id: null,
+                totalSum: { $sum: "$totalAmount" },
+            }
+        }
+    ])
+    return result.length > 0 ? result[0].totalSum : 0
+})
+
+// TESTED ✅
+schema.static("getPeopleImpacted", async function () {
+    const result = await this.aggregate([
+        { $unwind: "$donors", },
+        { $count: "totalDonors"}
+    ])
+    return result.length > 0 ? result[0].totalDonors : 0
+})
 
 schema.pre('save', async function (this) {
-    if (this.allocatedAmount == this.totalAmount) 
+    if (this.allocatedAmount == this.totalAmount)
         this.status = "completed"
 })
 
-const ImpactFunds = mongoose.model<IImpactFunds>('ImpactFunds', schema)
+const ImpactFunds = mongoose.model<IImpactFunds, ImpactFundsModel>('ImpactFunds', schema)
 
 export default ImpactFunds

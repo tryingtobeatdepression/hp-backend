@@ -3,7 +3,21 @@ import catchAsync from "../../utils/catch-async";
 import { stripe } from "../../utils/stripe";
 import { factory } from "../common/handler-factory"
 import { impactFundsRepository } from "./repository";
+import { projectRepository } from "../project/repository";
 import { AppError } from "../common/errors";
+
+export const getStatistics = catchAsync(async (req: Request, res: Response, next: any) => {
+    const economicImpact = await impactFundsRepository.getEconomicImpact()
+    const peopleImpacted = await impactFundsRepository.getPeopleImpacted()
+    const liveProjects = await impactFundsRepository.getLiveProjectsCount()
+    const completedProjects = await impactFundsRepository.getCompletedProjectsCount()
+    const educationals = await projectRepository.getEducationalsCount()
+
+    return res.status(200).json({
+        economicImpact, peopleImpacted, liveProjects,
+        completedProjects, educationals,
+    })
+})
 
 export const makeDonation = catchAsync(async (req: Request, res: Response, next: any) => {
     const { amount } = req.body
