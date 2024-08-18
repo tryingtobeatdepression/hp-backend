@@ -73,7 +73,6 @@ const schema = new Schema<IExperience>(
                 type: Number,
                 min: 1,
                 max: 5,
-                required: true,
             }
         }],
         includes: [
