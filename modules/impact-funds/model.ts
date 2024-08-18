@@ -1,11 +1,13 @@
 import mongoose, { Schema, Document, Types, Model } from 'mongoose'
 import { IProject } from "../project/model";
 import { DonationType } from "./enums";
+import { IUser } from '../user/model';
 
 interface DonorObject {
     id?: string
+    user: IUser['_id']
     donation: number
-    type?: DonationType
+    // type?: DonationType
     date?: Date
 }
 

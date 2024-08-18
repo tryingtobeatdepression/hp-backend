@@ -20,7 +20,7 @@ export const getStatistics = catchAsync(async (req: Request, res: Response, next
 })
 
 export const makeDonation = catchAsync(async (req: Request, res: Response, next: any) => {
-    const { amount } = req.body
+    const { amount, user } = req.body
     const { id } = req.params;
 
     const doc = await impactFundsRepository.findById(id)
@@ -39,7 +39,7 @@ export const makeDonation = catchAsync(async (req: Request, res: Response, next:
     if(paymentIntent.status !== 'succeeded')
         return next(new AppError("Payment failed.", 500))
 
-    doc.addDonor({ donation: amount, })
+    doc.addDonor({ user, donation: amount, })
     
     res.status(201).json({
         status: 'success',
