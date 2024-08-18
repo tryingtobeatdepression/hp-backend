@@ -2,8 +2,8 @@ import Stripe from "stripe";
 import { v4 } from "uuid";
 
 class StripeService {
-    #s = new Stripe('sk_test_Gx4mWEgHtCMr4DYMUIqfIrsz')
-
+    #s = new Stripe('sk_test_4eC39HqLyjWDarjtT1zdp7dc')
+    
     async createCardPaymentMethod(): Promise<any> {
         return await this.#s.paymentMethods.create({
             type: 'card',
@@ -21,7 +21,7 @@ class StripeService {
             {
                 email,
                 description,
-                source: token,
+                source: token.id,
             },
             { idempotencyKey: v4(), }
         );
