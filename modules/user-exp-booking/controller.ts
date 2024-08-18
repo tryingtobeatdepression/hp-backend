@@ -11,9 +11,10 @@ import { ClientSession } from "mongoose";
 
 export const create = catchAsync(async (req: Request, res: Response, next: any) => {
     // await handleTransaction(async (session: ClientSession) => {
-    const { user, experience } = req.body;
+    const { user, experience, token } = req.body;
 
-    if (! await userRepo.findById(user))
+    const u = await userRepo.findById(user)
+    if (!u)
         return next(new AppError("User doesn't exist.", 400))
 
     const e = await experienceRepository.findById(experience)
@@ -25,10 +26,12 @@ export const create = catchAsync(async (req: Request, res: Response, next: any) 
             msg: 'No seats are availabe for this experience!.',
         })
 
-    const paymentMethod = await stripe.createCardPaymentMethod()
-    const customer = await stripe.createCustomer("User-Booking")
+    // const paymentMethod = await stripe.createCardPaymentMethod()
+    const customer = await stripe.createCustomer(
+        u.email, "User-Booking", token
+    )
     const paymentIntent = await stripe.createPaymentIntent(
-        e.cost, paymentMethod.id, customer.id
+        e.cost, token, customer.id
     )
 
     if (paymentIntent.status !== 'succeeded')

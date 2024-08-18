@@ -16,25 +16,25 @@ class StripeService {
         });
     }
 
-    async createCustomer(description: string): Promise<any> {
+    async createCustomer(email: string, description: string, token: any): Promise<any> {
         return await this.#s.customers.create(
-            { description },
+            {
+                email,
+                description,
+                source: token,
+            },
             { idempotencyKey: v4(), }
         );
     }
 
-    async createPaymentIntent(amount: number, pmid: any, cid: any) {
+    async createPaymentIntent(amount: number, token: any, cid: any) {
         return await this.#s.paymentIntents.create({
             amount,
             currency: 'usd',
-            payment_method: pmid,
-            customer: cid,
-            confirm: true,
-            automatic_payment_methods: {
-                enabled: true, 
-                allow_redirects: 'never',
-            }
-            // receipt_email: 'xxx@mail.com'
+            customer: cid, 
+            payment_method: token, 
+            confirm: true, 
+            off_session: true, 
         })
     }
 

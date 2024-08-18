@@ -20,7 +20,7 @@ export const getStatistics = catchAsync(async (req: Request, res: Response, next
 })
 
 export const makeDonation = catchAsync(async (req: Request, res: Response, next: any) => {
-    const { amount, user } = req.body
+    const { amount, user, token } = req.body
     const { id } = req.params;
 
     const doc = await impactFundsRepository.findById(id)
@@ -30,10 +30,11 @@ export const makeDonation = catchAsync(async (req: Request, res: Response, next:
     if(doc.hasExceeded(amount))
         return next(new AppError("Amount excceds total amount.", 400))
 
-    const paymentMethod = await stripe.createCardPaymentMethod()
-    const customer = await stripe.createCustomer("Donor")
+    const customer = await stripe.createCustomer(
+        "ex@mail.com", "Donor", token
+    )
     const paymentIntent = await stripe.createPaymentIntent(
-        amount, paymentMethod.id, customer.id
+        amount, token, customer.id
     )
 
     if(paymentIntent.status !== 'succeeded')
