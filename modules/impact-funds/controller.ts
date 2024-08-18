@@ -5,6 +5,7 @@ import { factory } from "../common/handler-factory"
 import { impactFundsRepository } from "./repository";
 import { projectRepository } from "../project/repository";
 import { AppError } from "../common/errors";
+import { userRepo } from "../../mongo/repositories/user.repo";
 
 export const getStatistics = catchAsync(async (req: Request, res: Response, next: any) => {
     const economicImpact = await impactFundsRepository.getEconomicImpact()
@@ -23,6 +24,10 @@ export const makeDonation = catchAsync(async (req: Request, res: Response, next:
     const { amount, user, token } = req.body
     const { id } = req.params;
 
+    const u = await userRepo.findById(user)
+    if (!u)
+        return next(new AppError("User doesn't exist.", 400))
+
     const doc = await impactFundsRepository.findById(id)
     if(!doc)
         return next(new AppError("Fund doesn't exist.", 403))
@@ -31,7 +36,7 @@ export const makeDonation = catchAsync(async (req: Request, res: Response, next:
         return next(new AppError("Amount excceds total amount.", 400))
 
     const customer = await stripe.createCustomer(
-        "ex@mail.com", "Donor", token
+        u.email, "Donor", token
     )
     const paymentIntent = await stripe.createPaymentIntent(
         amount, token, customer.id
