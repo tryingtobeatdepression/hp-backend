@@ -26,13 +26,13 @@ export const create = catchAsync(async (req: Request, res: Response, next: any) 
             msg: 'No seats are availabe for this experience!.',
         })
 
-    // const paymentMethod = await stripe.createCardPaymentMethod()
-    const customer = await stripe.createCustomer(
-        u.email, "User-Booking", token
-    )
-    const paymentIntent = await stripe.createPaymentIntent(
-        e.cost, token, customer.id
-    )
+        const paymentMethod = await stripe.createCardPaymentMethod()
+        const customer = await stripe.createCustomer(
+            u.email, "Donor"
+        )
+        const paymentIntent = await stripe.createPaymentIntent(
+            e.cost, paymentMethod.id, customer.id
+        )
 
     if (paymentIntent.status !== 'succeeded')
         return next(new AppError("Payment failed", 500))

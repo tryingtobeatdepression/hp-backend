@@ -2,7 +2,7 @@ import Stripe from "stripe";
 import { v4 } from "uuid";
 
 class StripeService {
-    #s = new Stripe('sk_test_51NDWMnDnOnVRIDi91ElkQqScjvdOk52a0jjrkURBvLv9qdiWf8PX9UMlWWTFAXJH5SZ2hy3jJXEfjfEtdq2Zgw4A00LOl2MTwi')
+    #s = new Stripe('sk_test_Gx4mWEgHtCMr4DYMUIqfIrsz')
     
     async createCardPaymentMethod(): Promise<any> {
         return await this.#s.paymentMethods.create({
@@ -16,25 +16,28 @@ class StripeService {
         });
     }
 
-    async createCustomer(email: string, description: string, token: any): Promise<any> {
+    async createCustomer(email: string, description: string): Promise<any> {
         return await this.#s.customers.create(
             {
                 email,
                 description,
-                source: token.id,
+                // source: token.id,
             },
             { idempotencyKey: v4(), }
         );
     }
 
-    async createPaymentIntent(amount: number, token: any, cid: any) {
+    async createPaymentIntent(amount: number, pmid: any, cid: any) {
         return await this.#s.paymentIntents.create({
             amount,
             currency: 'usd',
-            customer: cid, 
-            payment_method: token, 
-            confirm: true, 
-            off_session: true, 
+            payment_method: pmid,
+            customer: cid,
+            confirm: true,
+            automatic_payment_methods: {
+                enabled: true, 
+                allow_redirects: 'never',
+            } 
         })
     }
 
